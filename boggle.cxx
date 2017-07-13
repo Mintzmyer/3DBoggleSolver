@@ -11,7 +11,7 @@
 
 
 /*************************************
-    Method for dictionary
+    Methods for dictionary:
     buildHash uploads words to hashtable
     dictLookup checks if word is in hashtable
 *************************************/
@@ -37,7 +37,7 @@ std::unordered_set<std::string> buildHash(std::string dictName)
     return dictHash;
 }
 
-//  dictLookup: accepts word, returns true/false
+//  dictLookup: accepts word and dictionary, returns true/false
 bool dictLookup(std::string word, std::unordered_set<std::string> dictHash)
 {
     return dictHash.count(word) > 0;
@@ -47,8 +47,28 @@ bool dictLookup(std::string word, std::unordered_set<std::string> dictHash)
     Data Structure for Cubies and Cube
     Class for Cubies and Cube
 *************************************/
+class Cubie
+{
+    int neighbors;
+    char letter;
+    int** nextTo;
+    
+    public:
+        Cubie(int, char);
+};
 
+Cubie::Cubie(int inNeighbors, char inLetter)
+{
+    neighbors = inNeighbors;
+    letter = inLetter;
+    int* a[neighbors];
+    nextTo = a;
+}
 
+class Cube
+{
+
+};
 
 /*************************************
     Method for word search
