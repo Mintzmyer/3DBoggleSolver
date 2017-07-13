@@ -72,10 +72,10 @@ void Cubie::setNeighborSize(int inNeighborSize)
     nextTo = array;
 }
 */
-void Cubie::setConnections(int inNeighbors, Cubie Cubies[])
+void Cubie::setConnections(int inNeighbors, Cubie cellNeighbors[])
 {
     neighbors = inNeighbors;
-    nextTo = Cubies;
+    nextTo = cellNeighbors;
 }
 
 class Cube
@@ -119,24 +119,31 @@ Cube::Cube(int inSize)
             //  If layer is 'front' or 'back' face of cube
        	    if (i == 0 || i == size-1)
             {
+                int frontOrBack = size;
+                //  If *BACK* top left corner, subtract to inner face
+                if (i == size-1) frontOrBack = (size * -1);
+
                 //  If cubie is on top row of front/back face
                 if (j < size)
                 {
                     if (j % size == 0)
                     {
                     //  Top Left Corner Found!
-                    
-
+                    Cubie Neighbors[7] = {Cubies[(i*16)+j+1], Cubies[(i*16)+j+size], Cubies[(i*16)+j+size+1], Cubies[(i*16)+j+size*frontOrBack], Cubies[(size*frontOrBack)+1], Cubies[(size*frontOrBack)+size], Cubies[(size*frontOrBack)+size+1]};
+                    Cubies[(i*16)+j].setConnections(7, Neighbors);
                     }
                     if (j+1 % size == 0)
                     {
                     //  Top Right Corner Found!
+                    Cubie Neighbors[7] = {Cubies[(i*16)+j-1], Cubies[(i*16)+j+size], Cubies[(i*16)+j+size-1], Cubies[(i*16)+j+size*frontOrBack], Cubies[(size*frontOrBack)-1], Cubies[(size*frontOrBack)+size], Cubies[(size*frontOrBack)+size-1]};
+                    Cubies[(i*16)+j].setConnections(7, Neighbors);
 
                     }
                     else
                     {
                     //  Top Edge Found!
-
+                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
+                    Cubies[(i*16)+j].setConnections(11, Neighbors);
                     }
                 }
                 //  If cubie is on bottom row of front/back face
@@ -145,16 +152,22 @@ Cube::Cube(int inSize)
                     if (j % size == 0)
                     {
                     //  Bottom Left Corner Found!
+                    Cubie Neighbors[7] = {Cubies[(i*16)+j+1], Cubies[(i*16)+j-size], Cubies[(i*16)+j-size+1], Cubies[(i*16)+j+size*frontOrBack], Cubies[(size*frontOrBack)+1], Cubies[(size*frontOrBack)-size], Cubies[(size*frontOrBack)-size+1]};
+                    Cubies[(i*16)+j].setConnections(7, Neighbors);
 
                     }
                     if (j+1 % size == 0)
                     {
                     //  Bottom Right Corner Found!
+                    Cubie Neighbors[7] = {Cubies[(i*16)+j-1], Cubies[(i*16)+j-size], Cubies[(i*16)+j-size-1], Cubies[(i*16)+j+size*frontOrBack], Cubies[(size*frontOrBack)-1], Cubies[(size*frontOrBack)-size], Cubies[(size*frontOrBack)-size-1]};
+                    Cubies[(i*16)+j].setConnections(7, Neighbors);
 
                     }
                     else
                     {
                     //  Bottom Edge Found!
+                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
+                    Cubies[(i*16)+j].setConnections(11, Neighbors);
 
                     }
                 }
@@ -164,10 +177,14 @@ Cube::Cube(int inSize)
                     if (j % size == 0)
                     {
                     //  Left Edge Found!
+                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
+                    Cubies[(i*16)+j].setConnections(11, Neighbors);
                     }
                     if (j+1 % size == 0)
                     {
                     //  Right Edge Found!
+                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
+                    Cubies[(i*16)+j].setConnections(11, Neighbors);
                     }
                     else
                     {
@@ -184,10 +201,14 @@ Cube::Cube(int inSize)
                     if (j % size == 0)
                     {
                     //  Top Left Edge Found!
+                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
+                    Cubies[(i*16)+j].setConnections(11, Neighbors);
                     }
                     if (j+1 % size == 0)
                     {
                     //  Top Right Edge Found!
+                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
+                    Cubies[(i*16)+j].setConnections(11, Neighbors);
                     }
                     else
                     {
@@ -200,10 +221,14 @@ Cube::Cube(int inSize)
                     if (j % size == 0)
                     {
                     //  Bottom Left Edge Found!
+                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
+                    Cubies[(i*16)+j].setConnections(11, Neighbors);
                     }
                     if (j+1 % size == 0)
                     {
                     //  Bottom Right Edge Found!
+                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
+                    Cubies[(i*16)+j].setConnections(11, Neighbors);
                     }
                     else
                     {
