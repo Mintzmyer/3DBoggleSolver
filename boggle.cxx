@@ -29,11 +29,6 @@ std::unordered_set<std::string> buildHash(std::string dictName)
         dictHash.insert (s);
     }
 
-    // Testing dictHash hashtable
-    std::cout << "Dictionary contains: ";
-    for (const std::string& x: dictHash) std::cout << " " << x;
-    std::cout << std::endl;
-
     return dictHash;
 }
 
@@ -76,6 +71,7 @@ class Cube
 
     public:
         Cube(int);
+        void setLetters(std::string);
         void printCube();
 };
 
@@ -124,6 +120,7 @@ Cube::Cube(int inSize)
                 if (k < size-1) right = false;
                 else right = true;
 
+                //  Six faces to cube
                 if (!top) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+((j-1)*4)+k]);
                 if (!bottom) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+((j+1)*4)+k]);
                 if (!front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+(j*4)+k]);
@@ -131,6 +128,7 @@ Cube::Cube(int inSize)
                 if (!left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+(j*4)+k-1]);
                 if (!right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+(j*4)+k+1]);
 
+                //  Twelve edges to cube
                 if (!top && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i)*16)+((j-1)*4)+k-1]);
                 if (!top && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i)*16)+((j-1)*4)+k+1]);
                 if (!bottom && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i)*16)+((j+1)*4)+k-1]);
@@ -146,7 +144,7 @@ Cube::Cube(int inSize)
                 if (!left && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j)*4)+k-1]);
                 if (!left && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j)*4)+k-1]);
 
-
+                //  Eight corners to cube
                 if (!top && !front && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k+1]);
                 if (!top && !back && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k+1]);
                 if (!bottom && !front && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k+1]);
@@ -158,6 +156,14 @@ Cube::Cube(int inSize)
                 if (!bottom && !back && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k-1]);
             }
         }
+    }
+}
+
+void Cube::setLetters(std::string cubeLetters)
+{
+    for (int i = 0; i < size*size*size; i++)
+    {
+        Cubies[i].setChar(cubeLetters[i]);
     }
 }
 
@@ -177,6 +183,7 @@ void Cube::printCube()
         }
         std::cout << std::endl;
     }
+    std::cout << std::endl;
 }
 
 /*************************************
@@ -193,20 +200,28 @@ void Cube::printCube()
 int main(int arc, char* argv[])
 {
 //  Check usage
-    if (arc != 3) std::cout << "usage: boggle.cxx cube-file word-file" << std::endl;
+    if (arc != 3)
+    {
+        std::cout << "usage: boggle.cxx cube-file word-file" << std::endl;
+        return 0;
+    }
 
 //  Call method for dictionary
     std::unordered_set<std::string> dictionary = buildHash(argv[2]);
 
-//  Testing dictLookup
-    if (dictLookup("xyz", dictionary)) std::cout << "Found xyz in dictionary" << std::endl;
-    if (dictLookup("assassin", dictionary)) std::cout << "Found assassin in dictionary" << std::endl;
-    if (dictLookup("virtual", dictionary)) std::cout << "Found virtual in dictionary" << std::endl;
-    if (dictLookup("irrelevancy", dictionary)) std::cout << "Found irrelevancy in dictionary" << std::endl;
-
 //  Iterate over list of cubes
 
     //  Upload cube
+    Cube Game1 (4);
+    std::ifstream infile(argv[1]);
+    std::string s;
+    while (std::getline(infile, s))
+    {
+        Cube game (4);
+        game.setLetters(s);
+        game.printCube();
+    }
+
 
     //  Traverse cube
 
