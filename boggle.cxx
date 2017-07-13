@@ -49,11 +49,11 @@ bool dictLookup(std::string word, std::unordered_set<std::string> dictHash)
 *************************************/
 class Cubie
 {
-    int neighbors;
-    char letter;
-    int** nextTo;
-    
     public:
+        int neighbors;
+        char letter;
+        int** nextTo;
+    
         void setChar(char);       
         void setNeighbors(int);
 };
@@ -218,7 +218,20 @@ Cube::Cube(int inSize)
 
 void Cube::printCube()
 {
+    std::cout << "Cube contents:\n" << std::endl;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            for (int k = 0; k < size; k++)
+            {
+                std::cout << Cubies[(4*i)+(16*j)+k].letter << " ";
 
+            }
+            std::cout << "    ";
+        }
+        std::cout << std::endl;
+    }
 }
 
 /*************************************
