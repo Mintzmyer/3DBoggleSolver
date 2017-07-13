@@ -4,17 +4,19 @@
     
     Samantha Mintzmyer
 ***********************************************/
-
-/*************************************
-    Data Structure for Cubies and Cube
-    Class for Cubies and Cube
-*************************************/
-
+#include <iostream>
 
 
 /*************************************
     Method for dictionary
     Uploads words to hashtable
+*************************************/
+
+
+
+/*************************************
+    Data Structure for Cubies and Cube
+    Class for Cubies and Cube
 *************************************/
 
 
@@ -30,7 +32,10 @@
     Main: 
     Calls dictUp, Calls travCube
 *************************************/
-
+int main(int arc, char* argv[])
+{
+//  Check usage
+    if (arc != 3) std::cout << "usage: boggle.cxx cube-file word-file" << std::endl;
 //  Call method for dictionary
 
 //  Iterate over list of cubes
@@ -40,6 +45,6 @@
     //  Traverse cube
 
 // Print # of cubes and time
-
+}
 
 
