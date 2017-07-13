@@ -8,6 +8,7 @@
 #include <string>
 #include <fstream>
 #include <unordered_set>
+#include <math.h>
 
 
 /*************************************
@@ -212,14 +213,22 @@ int main(int arc, char* argv[])
 //  Iterate over list of cubes
 
     //  Upload cube
-    Cube Game1 (4);
     std::ifstream infile(argv[1]);
     std::string s;
+    int cubeSize;
     while (std::getline(infile, s))
     {
-        Cube game (4);
-        game.setLetters(s);
-        game.printCube();
+        try
+        {
+            cubeSize = (int) cbrt(s.length());
+            Cube game (cubeSize);
+            game.setLetters(s);
+            game.printCube();
+        }
+        catch (int e)
+        {
+        std::cout << "Exception! Check each cube has the correct number of letters. Exception #" << e << std::endl;
+        }
     }
 
 
