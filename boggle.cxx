@@ -51,31 +51,22 @@ class Cubie
 {
     public:
         bool used;
-        int neighbors;
+        int neighbors = 0;
         char letter;
-        Cubie * nextTo;
-    
+        Cubie * nextTo[26];
+   
         void setChar(char);       
-        void setNeighborSize(int);
-        void setConnections(int, Cubie[]);
+        void addNeighbor(Cubie);
 };
 
 void Cubie::setChar(char inLetter)
 {
     letter = inLetter;
 }
-/*
-void Cubie::setNeighborSize(int inNeighborSize)
-{ 
-    neighbors = inNeighborSize;
-    int* array[neighbors];
-    nextTo = array;
-}
-*/
-void Cubie::setConnections(int inNeighbors, Cubie cellNeighbors[])
+void Cubie::addNeighbor(Cubie cell)
 {
-    neighbors = inNeighbors;
-    nextTo = cellNeighbors;
+    nextTo[neighbors] = &cell;
+    neighbors++;
 }
 
 class Cube
@@ -111,7 +102,7 @@ Cube::Cube(int inSize)
 
     //  Populate cubie nextTo array with pointer to all cubies neighboring
     //  Iterate through the ith layer of the cube
-    bool front, back, top bottom, left, right;
+    bool front, back, top, bottom, left, right;
     for (int i = 0; i < size; i++)
     {
         //  Iterate through the jth row of the ith layer
