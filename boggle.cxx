@@ -111,146 +111,60 @@ Cube::Cube(int inSize)
 
     //  Populate cubie nextTo array with pointer to all cubies neighboring
     //  Iterate through the ith layer of the cube
+    bool front, back, top bottom, left, right;
     for (int i = 0; i < size; i++)
     {
-        //  Iterate through the jth cubie of the ith layer
-        for (int j = 0; j < size*size; j++)
+        //  Iterate through the jth row of the ith layer
+        for (int j = 0; j < size; j++)
         {
-            //  If layer is 'front' or 'back' face of cube
-       	    if (i == 0 || i == size-1)
+            //  Iterate through the kth column of the jth row of the ith layer
+            for (int k = 0; k < size; k++)
             {
-                int frontOrBack = size;
-                //  If *BACK* top left corner, subtract to inner face
-                if (i == size-1) frontOrBack = (size * -1);
+                if (i > 0) front = false;
+                else front = true;
+                if (i < size-1) back = false;
+                else back = true;
+                if (j > 0) top = false;
+                else top = true;
+                if (j < size-1) bottom = false;
+                else bottom = true;
+                if (k > 0) left = false;
+                else left = true;
+                if (k < size-1) right = false;
+                else right = true;
 
-                //  If cubie is on top row of front/back face
-                if (j < size)
-                {
-                    if (j % size == 0)
-                    {
-                    //  Top Left Corner Found!
-                    Cubie Neighbors[7] = {Cubies[(i*16)+j+1], Cubies[(i*16)+j+size], Cubies[(i*16)+j+size+1], Cubies[(i*16)+j+size*frontOrBack], Cubies[(size*frontOrBack)+1], Cubies[(size*frontOrBack)+size], Cubies[(size*frontOrBack)+size+1]};
-                    Cubies[(i*16)+j].setConnections(7, Neighbors);
-                    }
-                    if (j+1 % size == 0)
-                    {
-                    //  Top Right Corner Found!
-                    Cubie Neighbors[7] = {Cubies[(i*16)+j-1], Cubies[(i*16)+j+size], Cubies[(i*16)+j+size-1], Cubies[(i*16)+j+size*frontOrBack], Cubies[(size*frontOrBack)-1], Cubies[(size*frontOrBack)+size], Cubies[(size*frontOrBack)+size-1]};
-                    Cubies[(i*16)+j].setConnections(7, Neighbors);
+                if (!top) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+((j-1)*4)+k]);
+                if (!bottom) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+((j+1)*4)+k]);
+                if (!front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+(j*4)+k]);
+                if (!back) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+(j*4)+k]);
+                if (!left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+(j*4)+k-1]);
+                if (!right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+(j*4)+k+1]);
 
-                    }
-                    else
-                    {
-                    //  Top Edge Found!
-                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
-                    Cubies[(i*16)+j].setConnections(11, Neighbors);
-                    }
-                }
-                //  If cubie is on bottom row of front/back face
-                else if (j >= size*(size-1))
-                {
-                    if (j % size == 0)
-                    {
-                    //  Bottom Left Corner Found!
-                    Cubie Neighbors[7] = {Cubies[(i*16)+j+1], Cubies[(i*16)+j-size], Cubies[(i*16)+j-size+1], Cubies[(i*16)+j+size*frontOrBack], Cubies[(size*frontOrBack)+1], Cubies[(size*frontOrBack)-size], Cubies[(size*frontOrBack)-size+1]};
-                    Cubies[(i*16)+j].setConnections(7, Neighbors);
+                if (!top && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i)*16)+((j-1)*4)+k-1]);
+                if (!top && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i)*16)+((j-1)*4)+k+1]);
+                if (!bottom && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i)*16)+((j+1)*4)+k-1]);
+                if (!bottom && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i)*16)+((j+1)*4)+k+1]);
 
-                    }
-                    if (j+1 % size == 0)
-                    {
-                    //  Bottom Right Corner Found!
-                    Cubie Neighbors[7] = {Cubies[(i*16)+j-1], Cubies[(i*16)+j-size], Cubies[(i*16)+j-size-1], Cubies[(i*16)+j+size*frontOrBack], Cubies[(size*frontOrBack)-1], Cubies[(size*frontOrBack)-size], Cubies[(size*frontOrBack)-size-1]};
-                    Cubies[(i*16)+j].setConnections(7, Neighbors);
+                if (!top && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k]);
+                if (!top && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k]);
+                if (!bottom && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k]);
+                if (!bottom && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k]);
 
-                    }
-                    else
-                    {
-                    //  Bottom Edge Found!
-                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
-                    Cubies[(i*16)+j].setConnections(11, Neighbors);
+                if (!right && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j)*4)+k+1]);
+                if (!right && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j)*4)+k+1]);
+                if (!left && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j)*4)+k-1]);
+                if (!left && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j)*4)+k-1]);
 
-                    }
-                }
-                else
-                {
-                //  If cubie is on middle side of front/back face
-                    if (j % size == 0)
-                    {
-                    //  Left Edge Found!
-                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
-                    Cubies[(i*16)+j].setConnections(11, Neighbors);
-                    }
-                    if (j+1 % size == 0)
-                    {
-                    //  Right Edge Found!
-                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
-                    Cubies[(i*16)+j].setConnections(11, Neighbors);
-                    }
-                    else
-                    {
-                    //  Side Found!
-                    }
-                }
-            }
-            //  If layer is 'middle' faces of cube sandwich
-            else
-            {
-                //  If cubie is on top row of middle faces
-                if (j < size)
-                {
-                    if (j % size == 0)
-                    {
-                    //  Top Left Edge Found!
-                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
-                    Cubies[(i*16)+j].setConnections(11, Neighbors);
-                    }
-                    if (j+1 % size == 0)
-                    {
-                    //  Top Right Edge Found!
-                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
-                    Cubies[(i*16)+j].setConnections(11, Neighbors);
-                    }
-                    else
-                    {
-                    //  Top Side Found!
-                    }
-                }
-                //  If cubie is on bottom row of middle faces
-                else if (j >= size*(size-1))
-                {
-                    if (j % size == 0)
-                    {
-                    //  Bottom Left Edge Found!
-                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
-                    Cubies[(i*16)+j].setConnections(11, Neighbors);
-                    }
-                    if (j+1 % size == 0)
-                    {
-                    //  Bottom Right Edge Found!
-                    Cubie Neighbors[11] = {Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j], Cubies[(i*16)+j]};
-                    Cubies[(i*16)+j].setConnections(11, Neighbors);
-                    }
-                    else
-                    {
-                    //  Bottom Side Found!
-                    }
-                }
-                else
-                {
-                //  If cubie is on middle side of middle faces
-                    if (j % size == 0)
-                    {
-                    //  Left Side Found!
-                    }
-                    if (j+1 % size == 0)
-                    {
-                    //  Right Side Found!
-                    }
-                    else
-                    {
-                    //  Central Found!
-                    }
-                }
+
+                if (!top && !front && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k+1]);
+                if (!top && !back && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k+1]);
+                if (!bottom && !front && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k+1]);
+                if (!bottom && !back && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k+1]);
+
+                if (!top && !front && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k-1]);
+                if (!top && !back && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k-1]);
+                if (!bottom && !front && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k-1]);
+                if (!bottom && !back && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k-1]);
             }
         }
     }
