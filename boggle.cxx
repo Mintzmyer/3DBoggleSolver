@@ -54,16 +54,16 @@ class Cubie
     int** nextTo;
     
     public:
-        setChar(char);
-        setNeighbors(int);
+        void setChar(char);       
+        void setNeighbors(int);
 };
 
-Cubie::setChar(char inLetter)
+void Cubie::setChar(char inLetter)
 {
     letter = inLetter;
 }
 
-Cubie::setNeighbors(int inNeighbors)
+void Cubie::setNeighbors(int inNeighbors)
 { 
     neighbors = inNeighbors;
     int* array[neighbors];
@@ -73,11 +73,11 @@ Cubie::setNeighbors(int inNeighbors)
 class Cube
 {
     int size;
-    int** Cubies;
+    Cubie * Cubies;
 
     public:
         Cube(int);
-        printCube();
+        void printCube();
 };
 
 /*****************************************
@@ -91,7 +91,7 @@ class Cube
 Cube::Cube(int inSize)
 {
     size = inSize;
-    int* array[size*size*size]
+    Cubie array[size*size*size];
     Cubies = array;
 
     // Create sizeXsizeXsize cubies for the cube
@@ -128,7 +128,7 @@ Cube::Cube(int inSize)
                     }
                 }
                 //  If cubie is on bottom row of front/back face
-                elif (j >= size*(size-1))
+                else if (j >= size*(size-1))
                 {
                     if (j % size == 0)
                     {
@@ -180,7 +180,7 @@ Cube::Cube(int inSize)
                     }
                 }
                 //  If cubie is on bottom row of middle faces
-                elif (j >= size*(size-1))
+                else if (j >= size*(size-1))
                 {
                     if (j % size == 0)
                     {
@@ -216,7 +216,7 @@ Cube::Cube(int inSize)
     }
 }
 
-Cube::printCube()
+void Cube::printCube()
 {
 
 }
