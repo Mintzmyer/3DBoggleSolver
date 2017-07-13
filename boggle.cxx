@@ -52,26 +52,38 @@ class Cubie
         Cubie * nextTo[26];
    
         void setChar(char);       
-        void addNeighbor(Cubie);
+        void addNeighbor(Cubie *);
+        void printConnections();
 };
 
 void Cubie::setChar(char inLetter)
 {
     letter = inLetter;
 }
-void Cubie::addNeighbor(Cubie cell)
+
+void Cubie::addNeighbor(Cubie * cell)
 {
-    nextTo[neighbors] = &cell;
+    nextTo[neighbors] = cell;
     neighbors++;
+}
+
+void Cubie::printConnections()
+{
+    for (int i = 0; i < neighbors; i++)
+    {
+        std::cout << nextTo[i]->letter << " ";
+    }
+    std::cout << std::endl;
 }
 
 class Cube
 {
-    int size;
-    Cubie * Cubies;
-
     public:
+        int size;
+        Cubie * Cubies;
+
         Cube(int);
+//        void setConnections();
         void setLetters(std::string);
         void printCube();
 };
@@ -96,7 +108,12 @@ Cube::Cube(int inSize)
         Cubie cell;
         Cubies[c] = cell;
     }
+/*
+}
 
+void Cube::setConnections()
+{
+*/
     //  Populate cubie nextTo array with pointer to all cubies neighboring
     //  Iterate through the ith layer of the cube
     bool front, back, top, bottom, left, right;
@@ -122,39 +139,39 @@ Cube::Cube(int inSize)
                 else right = true;
 
                 //  Six faces to cube
-                if (!top) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+((j-1)*4)+k]);
-                if (!bottom) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+((j+1)*4)+k]);
-                if (!front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+(j*4)+k]);
-                if (!back) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+(j*4)+k]);
-                if (!left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+(j*4)+k-1]);
-                if (!right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[(i*16)+(j*4)+k+1]);
+                if (!top) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+((j-1)*4)+k]);
+                if (!bottom) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+((j+1)*4)+k]);
+                if (!front) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+(j*4)+k]);
+                if (!back) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+(j*4)+k]);
+                if (!left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+(j*4)+k-1]);
+                if (!right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+(j*4)+k+1]);
 
                 //  Twelve edges to cube
-                if (!top && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i)*16)+((j-1)*4)+k-1]);
-                if (!top && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i)*16)+((j-1)*4)+k+1]);
-                if (!bottom && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i)*16)+((j+1)*4)+k-1]);
-                if (!bottom && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i)*16)+((j+1)*4)+k+1]);
+                if (!top && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i)*16)+((j-1)*4)+k-1]);
+                if (!top && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i)*16)+((j-1)*4)+k+1]);
+                if (!bottom && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i)*16)+((j+1)*4)+k-1]);
+                if (!bottom && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i)*16)+((j+1)*4)+k+1]);
 
-                if (!top && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k]);
-                if (!top && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k]);
-                if (!bottom && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k]);
-                if (!bottom && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k]);
+                if (!top && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j-1)*4)+k]);
+                if (!top && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j-1)*4)+k]);
+                if (!bottom && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j+1)*4)+k]);
+                if (!bottom && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j+1)*4)+k]);
 
-                if (!right && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j)*4)+k+1]);
-                if (!right && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j)*4)+k+1]);
-                if (!left && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j)*4)+k-1]);
-                if (!left && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j)*4)+k-1]);
+                if (!right && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j)*4)+k+1]);
+                if (!right && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j)*4)+k+1]);
+                if (!left && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j)*4)+k-1]);
+                if (!left && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j)*4)+k-1]);
 
                 //  Eight corners to cube
-                if (!top && !front && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k+1]);
-                if (!top && !back && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k+1]);
-                if (!bottom && !front && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k+1]);
-                if (!bottom && !back && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k+1]);
+                if (!top && !front && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j-1)*4)+k+1]);
+                if (!top && !back && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j-1)*4)+k+1]);
+                if (!bottom && !front && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j+1)*4)+k+1]);
+                if (!bottom && !back && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j+1)*4)+k+1]);
 
-                if (!top && !front && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k-1]);
-                if (!top && !back && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k-1]);
-                if (!bottom && !front && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k-1]);
-                if (!bottom && !back && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k-1]);
+                if (!top && !front && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j-1)*4)+k-1]);
+                if (!top && !back && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j-1)*4)+k-1]);
+                if (!bottom && !front && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j+1)*4)+k-1]);
+                if (!bottom && !back && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j+1)*4)+k-1]);
             }
         }
     }
@@ -223,7 +240,15 @@ int main(int arc, char* argv[])
             cubeSize = (int) cbrt(s.length());
             Cube game (cubeSize);
             game.setLetters(s);
+//            game.setConnections();
             game.printCube();
+
+
+            for (int i = 0; i < 64; i++)
+            {
+                game.Cubies[i].printConnections();
+            }
+
         }
         catch (int e)
         {
