@@ -50,24 +50,32 @@ bool dictLookup(std::string word, std::unordered_set<std::string> dictHash)
 class Cubie
 {
     public:
+        bool used;
         int neighbors;
         char letter;
-        int** nextTo;
+        Cubie * nextTo;
     
         void setChar(char);       
-        void setNeighbors(int);
+        void setNeighborSize(int);
+        void setConnections(int, Cubie[]);
 };
 
 void Cubie::setChar(char inLetter)
 {
     letter = inLetter;
 }
-
-void Cubie::setNeighbors(int inNeighbors)
+/*
+void Cubie::setNeighborSize(int inNeighborSize)
 { 
-    neighbors = inNeighbors;
+    neighbors = inNeighborSize;
     int* array[neighbors];
     nextTo = array;
+}
+*/
+void Cubie::setConnections(int inNeighbors, Cubie Cubies[])
+{
+    neighbors = inNeighbors;
+    nextTo = Cubies;
 }
 
 class Cube
@@ -117,14 +125,18 @@ Cube::Cube(int inSize)
                     if (j % size == 0)
                     {
                     //  Top Left Corner Found!
+                    
+
                     }
                     if (j+1 % size == 0)
                     {
                     //  Top Right Corner Found!
+
                     }
                     else
                     {
                     //  Top Edge Found!
+
                     }
                 }
                 //  If cubie is on bottom row of front/back face
@@ -133,14 +145,17 @@ Cube::Cube(int inSize)
                     if (j % size == 0)
                     {
                     //  Bottom Left Corner Found!
+
                     }
                     if (j+1 % size == 0)
                     {
                     //  Bottom Right Corner Found!
+
                     }
                     else
                     {
                     //  Bottom Edge Found!
+
                     }
                 }
                 else
