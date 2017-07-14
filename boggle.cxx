@@ -95,8 +95,8 @@ class Cubie
 
 Cubie::Cubie()
 {
-    int neighbors = 0;
-    bool used = false;
+    this->neighbors = 0;
+    this->used = false;
     this->nextTo = new Cubie*[26];
 }
 
@@ -107,6 +107,7 @@ void Cubie::setChar(char inLetter)
 
 void Cubie::addNeighbor(Cubie * cell)
 {
+//    std::cout << "Index: " << this->neighbors << std::endl;
     nextTo[neighbors] = cell;
     this->neighbors++;
 }
@@ -154,13 +155,14 @@ class Cube
 
 Cube::Cube(int inSize)
 {
-    size = inSize;
+    this->size = inSize;
     this->Cubies = new Cubie*[size*size*size];
 
     // Create sizeXsizeXsize cubies for the cube
     for (int c = 0; c < pow(size, 3); c++)
     {
         this->Cubies[c] = new Cubie();
+//        std::cout << "New: " << this->Cubies[c]->neighbors << std::endl;
     }
 }
 
@@ -340,6 +342,7 @@ int main(int arc, char* argv[])
     {
         try
         {
+            std::cout << "In Cube work loop" << std::endl;
             std::unordered_set<std::string> gameDict = dictionary;
             std::set<std::string> gamePreDict = prefixDictionary;
             
