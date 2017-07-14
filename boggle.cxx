@@ -96,6 +96,7 @@ class Cubie
 Cubie::Cubie()
 {
     int neighbors = 0;
+    bool used = false;
 }
 
 void Cubie::setChar(char inLetter)
@@ -261,8 +262,31 @@ void Cube::printCube()
     Method for word search
     Traverses cube comparing to hasht
 *************************************/
-int Traverse(Cubie cell, Cubie** letters, std::string word)
+int Traverse(Cubie cell, Cubie** letters, std::string word, std::unordered_set<std::string> * dictionary, std::set<std::string> * prefixDictionary)
 {
+    int total = 0;
+    //  Check if word is in dictionary
+    if (dictLookup(word, *dictionary)) total++;
+    //  Check if prefix exists
+    if (dictPrefix(word, *prefixDictionary))
+    {
+        cell.used = true;
+        letters[word.length()] = &cell;
+        word+=cell.letter;
+        for (int i = 0; i < cell.neighbors; i++)
+        {
+            total += Traverse(*cell.nextTo[i], letters, word, dictionary, prefixDictionary);
+        }
+    }
+    else
+    {
+        
+
+    }
+    return total;
+
+    //  Set cell to occupied
+
     //  Check if word is in dictionary
 
     //  
@@ -303,6 +327,7 @@ int main(int arc, char* argv[])
     std::string s;
     int cubeSize;
     int cubeCount = 0;
+    Cubie * letters[64];
     while (std::getline(infile, s))
     {
         //std::cout << "In while loop, about to initialize cube" << std::endl;
@@ -323,15 +348,20 @@ int main(int arc, char* argv[])
                 //game.Cubies[i].printConnections();
             }
 
+            int wordCount = 0;
+            std::string word = "";
+            for (int i = 0; i < (cubeSize*cubeSize*cubeSize); i++)
+            {
+                wordCount = wordCount + Traverse(game.Cubies[i], letters, word, &dictionary, &prefixDictionary);
+            }
+            std::cout << wordCount << std::endl;
+
         }
         catch (int e)
         {
         std::cout << "Exception! Check each cube has the correct number of letters. Exception #" << e << std::endl;
         }
     }
-
-
-    //  Traverse cube
 
     duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
     std::cout << "Scored " << cubeCount << " cubes in " << duration << " seconds." << std::endl;
