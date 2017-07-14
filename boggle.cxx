@@ -11,7 +11,7 @@
 #include <math.h>
 #include <cstdio>
 #include <ctime>
-
+#include <set>
 
 /*************************************
     Methods for dictionary:
@@ -35,11 +35,45 @@ std::unordered_set<std::string> buildHash(std::string dictName)
     return dictHash;
 }
 
+//  buildSet: accepts dictionary file, returns hashtable of words
+std::set<std::string> buildSet(std::string dictName)
+{
+    std::set<std::string> dictHash;
+
+    //  Read words into hashtable
+    std::ifstream infile(dictName);
+    std::string s;
+    while (std::getline(infile, s))
+    {
+        dictHash.insert (s);
+    }
+
+    return dictHash;
+}
+
 //  dictLookup: accepts word and dictionary, returns true/false
 bool dictLookup(std::string word, std::unordered_set<std::string> dictHash)
 {
     return dictHash.count(word) > 0;
 }
+
+//  dictPrefix: accepts word and dictionary, returns if prefix exists
+bool dictPrefix(std::string word, std::set<std::string> dictHash)
+{
+    std::set<std::string>::iterator prefix;
+    prefix = dictHash.lower_bound(word);
+    std::cout << "Prefix: " << *prefix << std::endl;
+    std::string result = *prefix;
+    bool test;
+    if (result.length() > word.length())
+    {
+        result = result.substr(0, word.length());
+        test = (0 == result.compare(word));
+    }
+    
+    return test;
+}
+
 
 /*************************************
     Data Structure for Cubies and Cube
@@ -227,8 +261,14 @@ void Cube::printCube()
     Method for word search
     Traverses cube comparing to hasht
 *************************************/
+int Traverse(Cubie cell, Cubie** letters, std::string word)
+{
+    //  Check if word is in dictionary
+
+    //  
 
 
+}
 
 /*************************************
     Main: 
@@ -249,6 +289,12 @@ int main(int arc, char* argv[])
 
 //  Call method for dictionary
     std::unordered_set<std::string> dictionary = buildHash(argv[2]);
+    std::set<std::string> prefixDictionary = buildSet(argv[2]);
+    
+    std::cout << "app: " << dictPrefix("app", prefixDictionary) << std::endl;
+    std::cout << "awaya: " << dictPrefix("awaya", prefixDictionary) << std::endl;
+    std::cout << "apr: " << dictPrefix("apr", prefixDictionary) << std::endl;
+    std::cout << "zzz: " << dictPrefix("zzz", prefixDictionary) << std::endl;
 
 //  Iterate over list of cubes
     //std::cout << "\nBeginning to iterate over list of cubes" << std::endl;
