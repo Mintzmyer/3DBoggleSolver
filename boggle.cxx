@@ -62,7 +62,7 @@ bool checkPrefix(std::string word, std::set<std::string> dictHash)
 {
     std::set<std::string>::iterator prefix;
     prefix = dictHash.lower_bound(word);
-    std::cout << "Prefix: " << *prefix;
+    //std::cout << "Prefix: " << *prefix;
     std::string result = *prefix;
     bool test;
     if (result.length() >= word.length())
@@ -70,9 +70,9 @@ bool checkPrefix(std::string word, std::set<std::string> dictHash)
         result = result.substr(0, word.length());
         test = (0 == result.compare(word));
     }
-    if (!test) std::cout << " !";
-    else if (test) std::cout << " =";
-    std::cout << "= " << word << std::endl;
+//    if (!test) std::cout << " !";
+//    else if (test) std::cout << " =";
+    //std::cout << "= " << word << std::endl;
     return test;
 }
 
@@ -244,7 +244,7 @@ void Cube::setLetters(std::string cubeLetters)
 
 void Cube::printCube()
 {
-    std::cout << "Cube contents:\n" << std::endl;
+    //std::cout << "Cube contents:\n" << std::endl;
     for (int i = 0; i < size; i++)
     {
         for (int j = 0; j < size; j++)
@@ -276,27 +276,27 @@ void Cube::garbage()
 *************************************/
 int Traverse(Cubie * cell, std::string word, std::unordered_set<std::string> * dictionary, std::set<std::string> * prefixDictionary)
 {
-    std::cout << "Word: " << word << std::endl;
-    cell->printConnections();
+    //std::cout << "Word: " << word << std::endl;
+    //cell->printConnections();
     
     int total = 0;
     //  Check if word is in dictionary
     if (dictLookup(word, *dictionary))
     {
         total++;
-        std::cout << "********** FOUND WORD #" << total << " : " << word << " *************" << std::endl;
+        //std::cout << "********** FOUND WORD #" << total << " : " << word << " *************" << std::endl;
         dictionary->erase(word);
         prefixDictionary->erase(word);
     }
     //  Check if prefix exists
     if (checkPrefix(word, *prefixDictionary))
     {
-        std::cout << "In if with: " << word << std::endl;
+        //std::cout << "In if with: " << word << std::endl;
         cell->used = true;
         for (int i = 0; i < cell->neighbors; i++)
         {
             word = word + std::string(1, cell->nextTo[i]->letter);
-            std::cout << " +1: " << word  << std::endl;
+            //std::cout << " +1: " << word  << std::endl;
             if (cell->nextTo[i]->used == false)
                 total += Traverse(cell->nextTo[i], word, dictionary, prefixDictionary);
             word.pop_back();        
@@ -306,7 +306,7 @@ int Traverse(Cubie * cell, std::string word, std::unordered_set<std::string> * d
     else
     {
         cell->used = false;
-        std::cout << "Dead End: " << word << std::endl;
+        //std::cout << "Dead End: " << word << std::endl;
     }
     return total;
 }
@@ -339,7 +339,7 @@ int main(int arc, char* argv[])
 //    std::cout << "zzz: " << checkPrefix("zzz", prefixDictionary) << std::endl;
 
 //  Iterate over list of cubes
-    std::cout << "\nBeginning to iterate over list of cubes" << std::endl;
+    //std::cout << "\nBeginning to iterate over list of cubes" << std::endl;
     //  Upload cube
     std::ifstream infile(argv[1]);
     std::string s;
@@ -347,46 +347,46 @@ int main(int arc, char* argv[])
     int cubeCount = 0;
     while (std::getline(infile, s))
     {
-        std::cout << "In while loop, about to initialize cube" << std::endl;
+        //std::cout << "In while loop, about to initialize cube" << std::endl;
         try
         {
             std::unordered_set<std::string> gameDict = dictionary;
             std::set<std::string> gamePreDict = prefixDictionary;
 /*
-            std::cout << "Test of PBV dictionaries" << std::endl;
+            //std::cout << "Test of PBV dictionaries" << std::endl;
             gameDict.erase("germicide");
             gamePreDict.erase("incantation");
-            std::cout << "Original: " << checkPrefix("incantation", prefixDictionary);
-            std::cout << " Copy: " << checkPrefix("incantation", gamePreDict) << std::endl;
-            std::cout << "Original: " << dictLookup("germicide", dictionary);
-            std::cout << " Copy: " << dictLookup("germicide", gameDict) << std::endl;
+            //std::cout << "Original: " << checkPrefix("incantation", prefixDictionary);
+            //std::cout << " Copy: " << checkPrefix("incantation", gamePreDict) << std::endl;
+            //std::cout << "Original: " << dictLookup("germicide", dictionary);
+            //std::cout << " Copy: " << dictLookup("germicide", gameDict) << std::endl;
 */
 
             cubeSize = (int) cbrt(s.length());
             Cube game (cubeSize);
             cubeCount++;
-            std::cout << "Cube initialized, about to set letters" << std::endl;
+            //std::cout << "Cube initialized, about to set letters" << std::endl;
             game.setConnections();
             game.setLetters(s);
-            std::cout << "Letters set, about to print" << std::endl;
-            game.printCube();
+            //std::cout << "Letters set, about to print" << std::endl;
+            //game.printCube();
 
             for (int i = 0; i < cubeSize*cubeSize*cubeSize; i++)
             {
-//                std::cout << "Inside connections loop: " << i << std::endl;
-                std::cout << game.Cubies[i]->letter << "   ";
-                game.Cubies[i]->printConnections();
+//                //std::cout << "Inside connections loop: " << i << std::endl;
+//                std::cout << game.Cubies[i]->letter << "   ";
+//                game.Cubies[i]->printConnections();
             }
 
             int wordCount = 0;
-            std::cout << "At traverse loop" << std::endl;
+            //std::cout << "At traverse loop" << std::endl;
 
             for (int i = 0; i < (cubeSize*cubeSize*cubeSize); i++)
             {
                 std::string word = std::string(1, game.Cubies[i]->letter);
-                std::cout << "New Cell: " << word << std::endl;
+                //std::cout << "New Cell: " << word << std::endl;
                 wordCount = wordCount + Traverse(game.Cubies[i], word, &gameDict, &gamePreDict);
-                game.printCube();
+                //game.printCube();
             }
             std::cout << wordCount << std::endl;
             game.garbage();
