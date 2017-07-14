@@ -62,7 +62,7 @@ bool dictPrefix(std::string word, std::set<std::string> dictHash)
 {
     std::set<std::string>::iterator prefix;
     prefix = dictHash.lower_bound(word);
-//    std::cout << "Prefix: " << *prefix << std::endl;
+    std::cout << "Prefix: " << *prefix << std::endl;
     std::string result = *prefix;
     bool test;
     if (result.length() > word.length())
@@ -131,6 +131,7 @@ class Cube
         void setConnections();
         void setLetters(std::string);
         void printCube();
+        void garbage();
 };
 
 /*****************************************
@@ -258,13 +259,20 @@ void Cube::printCube()
     std::cout << std::endl;
 }
 
+void Cube::garbage()
+{
+    delete this->Cubies;
+}
+
 /*************************************
     Method for word search
     Traverses cube comparing to hasht
 *************************************/
 int Traverse(Cubie * cell, Cubie** letters, std::string word, std::unordered_set<std::string> * dictionary, std::set<std::string> * prefixDictionary)
 {
-    std::cout << "At Traverse method" << std::endl;
+    std::cout << "Word: " << word << std::endl;
+    cell->printConnections();
+    
     int total = 0;
     //  Check if word is in dictionary
     if (dictLookup(word, *dictionary)) total++;
@@ -272,17 +280,16 @@ int Traverse(Cubie * cell, Cubie** letters, std::string word, std::unordered_set
     if (dictPrefix(word, *prefixDictionary))
     {
         cell->used = true;
-        std::cout << "If: " << word << " ";
         for (int i = 0; i < cell->neighbors; i++)
         {
-            std::cout << " for " << word + cell->nextTo[i]->letter;
+            std::cout << " +1: " << word + cell->nextTo[i]->letter << std::endl;
             if (cell->nextTo[i]->used == false)
                 total += Traverse(cell->nextTo[i], letters, word, dictionary, prefixDictionary);
         }
     }
     else
     {
-        std::cout << "Else: " << word;
+        std::cout << "Dead End: " << word;
         word.pop_back();        
         cell->used = false;
     }
@@ -350,11 +357,12 @@ int main(int arc, char* argv[])
             for (int i = 0; i < (cubeSize*cubeSize*cubeSize); i++)
             {
                 std::string word = std::string(1, game.Cubies[i].letter);
-                std::cout << "word: " << word;
+                std::cout << "New Cell: " << word;
                 wordCount = wordCount + Traverse(&game.Cubies[i], letters, word, &dictionary, &prefixDictionary);
                 game.printCube();
             }
             std::cout << wordCount << std::endl;
+            game.garbage();
 
         }
         catch (int e)
