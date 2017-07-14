@@ -268,7 +268,7 @@ void Cube::garbage()
     Method for word search
     Traverses cube comparing to hasht
 *************************************/
-int Traverse(Cubie * cell, Cubie** letters, std::string word, std::unordered_set<std::string> * dictionary, std::set<std::string> * prefixDictionary)
+int Traverse(Cubie * cell, std::string word, std::unordered_set<std::string> * dictionary, std::set<std::string> * prefixDictionary)
 {
     std::cout << "Word: " << word << std::endl;
     cell->printConnections();
@@ -282,9 +282,10 @@ int Traverse(Cubie * cell, Cubie** letters, std::string word, std::unordered_set
         cell->used = true;
         for (int i = 0; i < cell->neighbors; i++)
         {
-            std::cout << " +1: " << word + cell->nextTo[i]->letter << std::endl;
+            word = std::string(1, cell->nextTo[i]->letter);
+            std::cout << " +1: " << word  << std::endl;
             if (cell->nextTo[i]->used == false)
-                total += Traverse(cell->nextTo[i], letters, word, dictionary, prefixDictionary);
+                total += Traverse(cell->nextTo[i], word, dictionary, prefixDictionary);
         }
     }
     else
@@ -330,7 +331,6 @@ int main(int arc, char* argv[])
     std::string s;
     int cubeSize;
     int cubeCount = 0;
-    Cubie * letters[64];
     while (std::getline(infile, s))
     {
         std::cout << "In while loop, about to initialize cube" << std::endl;
@@ -345,7 +345,7 @@ int main(int arc, char* argv[])
             std::cout << "Letters set, about to print" << std::endl;
             game.printCube();
 
-            for (int i = 0; i < 64; i++)
+            for (int i = 0; i < cubeSize*cubeSize*cubeSize; i++)
             {
                 std::cout << game.Cubies[i].letter << "   ";
                 game.Cubies[i].printConnections();
@@ -357,8 +357,8 @@ int main(int arc, char* argv[])
             for (int i = 0; i < (cubeSize*cubeSize*cubeSize); i++)
             {
                 std::string word = std::string(1, game.Cubies[i].letter);
-                std::cout << "New Cell: " << word;
-                wordCount = wordCount + Traverse(&game.Cubies[i], letters, word, &dictionary, &prefixDictionary);
+                std::cout << "New Cell: " << word << std::endl;
+                wordCount = wordCount + Traverse(&game.Cubies[i], word, &dictionary, &prefixDictionary);
                 game.printCube();
             }
             std::cout << wordCount << std::endl;
@@ -376,5 +376,3 @@ int main(int arc, char* argv[])
 
 // Print # of cubes and time
 }
-
-
