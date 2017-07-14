@@ -108,8 +108,6 @@ void Cubie::setChar(char inLetter)
 void Cubie::addNeighbor(Cubie * cell)
 {
     nextTo[neighbors] = cell;
-    //std::cout << cell->letter;
-    //std::cout << nextTo[neighbors]->letter;
     this->neighbors++;
 }
 
@@ -160,7 +158,7 @@ Cube::Cube(int inSize)
     this->Cubies = new Cubie*[size*size*size];
 
     // Create sizeXsizeXsize cubies for the cube
-    for (int c = 0; c < size*size*size; c++)
+    for (int c = 0; c < pow(size, 3); c++)
     {
         this->Cubies[c] = new Cubie();
     }
@@ -168,13 +166,10 @@ Cube::Cube(int inSize)
 
 void Cube::setConnections()
 {
-    std::cout << "In setConnections" << std::endl;
-
     //  Populate cubie nextTo array with pointer to all cubies neighboring
     //  Iterate through the ith layer of the cube
     bool front, back, top, bottom, left, right;
 
-    std::cout << "Before loops" << std::endl;
 
     for (int i = 0; i < size; i++)
     {
@@ -184,130 +179,54 @@ void Cube::setConnections()
             //  Iterate through the kth column of the jth row of the ith layer
             for (int k = 0; k < size; k++)
             {
-                std::cout << "Setting front/back" << std::endl;
                 if (i > 0) front = false;
                 else front = true;
                 if (i < this->size-1) back = false; 
                 else back = true;
-                std::cout << "Setting top/bottom" << std::endl;
                 if (j > 0) top = false;
                 else top = true;
                 if (j < this->size-1) bottom = false;
                 else bottom = true;
-                std::cout << "Setting left" << std::endl;
                 if (k > 0) left = false;
                 else left = true;
-                std::cout << "Setting right" << std::endl;
                 if (k < this->size-1) right = false;
                 else right = true;
 
-                std::cout << "Before faces" << std::cout;
+
                 //  Six faces to cube
-                if (!top) 
-                {
-                    Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+((j-1)*4)+k]);
-                    if (!left) 
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j-1)*4)+k-1]);
-                    }
-                    if (!right) 
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j-1)*4)+k+1]);
-                    }
-                    if (!front) 
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k]);
-                        if (!right) 
-                        {
-                            Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k+1]);
-                        }
-                        if (!left) 
-                        {
-                            Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k-1]);
-                        }
-                    }
-                    if (!back)
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k]);
-                        if (!right) 
-                        {
-                            Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k+1]);
-                        }
-                        if (!left) 
-                        {
-                            Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k-1]);
-                        }
-                    }
-                }
-                if (!bottom) 
-                {
-                    Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+((j+1)*4)+k]);
-                    if (!left) 
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j+1)*4)+k-1]);
-                    }
-                    if (!right) 
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j+1)*4)+k+1]);
-                    }
-                    if (!front) 
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k]);
-                        if (!right) 
-                        {
-                            Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k+1]);
-                        }
-                        if (!left) 
-                        {
-                            Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k-1]);
-                        }
-                    }
-                    if (!back) 
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k]);
-                        if (!right) 
-                        {
-                            Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k+1]);
-                        }
-                        if (!left) 
-                        {
-                            Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k-1]);
-                        }
-                    }
-                }
-                if (!front) 
-                {
-                    Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+(j*4)+k]);
-                    if (!right) 
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j)*4)+k+1]);
-                    }
-                    if (!left && !front) 
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j)*4)+k-1]); 
-                    }
-                }
-                if (!back) 
-                {
-                    Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+(j*4)+k]);
-                    if (!right) 
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j)*4)+k+1]);
-                    }
-                    if (!left) 
-                    {
-                        Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j)*4)+k-1]);
-                    }
-                    
-                }
-                if (!left) 
-                {
-                    Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+(j*4)+k-1]);
-                }
-                if (!right)
-                {
-                    Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+(j*4)+k+1]);
-                }
+                if (!top) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+((j-1)*4)+k]);
+                if (!bottom) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+((j+1)*4)+k]);
+                if (!front) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+(j*4)+k]);
+                if (!back) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+(j*4)+k]);
+                if (!left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+(j*4)+k-1]);
+                if (!right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+(j*4)+k+1]);
+
+                //  Twelve edges to cube
+                if (!top && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j-1)*4)+k-1]);
+                if (!top && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j-1)*4)+k+1]);
+                if (!bottom && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j+1)*4)+k-1]);
+                if (!bottom && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j+1)*4)+k+1]);
+
+                if (!top && !front) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k]);
+                if (!top && !back) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k]);
+                if (!bottom && !front) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k]);
+                if (!bottom && !back) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k]);
+
+                if (!right && !front) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j)*4)+k+1]);
+                if (!right && !back) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j)*4)+k+1]);
+                if (!left && !front) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j)*4)+k-1]);
+                if (!left && !back) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j)*4)+k-1]);
+
+                //  Eight corners to cube
+                if (!top && !front && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k+1]);
+                if (!top && !back && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k+1]);
+                if (!bottom && !front && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k+1]);
+                if (!bottom && !back && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k+1]);
+
+                if (!top && !front && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k-1]);
+                if (!top && !back && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k-1]);
+                if (!bottom && !front && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k-1]);
+                if (!bottom && !back && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k-1]);
             }
         }
     }
@@ -315,7 +234,7 @@ void Cube::setConnections()
 
 void Cube::setLetters(std::string cubeLetters)
 {
-    for (int i = 0; i < size*size*size; i++)
+    for (int i = 0; i < pow(size, 3); i++)
     {
         Cubies[i]->setChar(cubeLetters[i]);
     }
@@ -342,7 +261,7 @@ void Cube::printCube()
 
 void Cube::garbage()
 {
-    for (int c = 0; c < size*size*size; c++)
+    for (int c = 0; c < pow(size, 3); c++)
     {
         Cubies[c]->trashCubie();
         delete this->Cubies[c];
@@ -410,7 +329,6 @@ int main(int arc, char* argv[])
     std::unordered_set<std::string> dictionary = buildHash(argv[2]);
     std::set<std::string> prefixDictionary = buildSet(argv[2]);
 
-    std::cout << "Dictionaries Made" << std::endl;
     
 //  Iterate over list of cubes
     //  Upload cube
@@ -425,27 +343,19 @@ int main(int arc, char* argv[])
             std::unordered_set<std::string> gameDict = dictionary;
             std::set<std::string> gamePreDict = prefixDictionary;
             
-            std::cout << "Dictionaries copied" << std::endl;
-
             cubeSize = (int) cbrt(s.length());
             Cube game (cubeSize);
      
-            std::cout << "Cube created" << std::endl;
-
             cubeCount++;
             game.setConnections();
 
-            std::cout << "Connections set" << std::endl;
-
             game.setLetters(s);
  
-            std::cout << "Letters set" << std::endl;
-
             //game.printCube();
 
             int wordCount = 0;
 
-            for (int i = 0; i < (cubeSize*cubeSize*cubeSize); i++)
+            for (int i = 0; i < (pow(cubeSize, 3)); i++)
             {
                 std::string word = std::string(1, game.Cubies[i]->letter);
                 wordCount = wordCount + Traverse(game.Cubies[i], word, &gameDict, &gamePreDict);
