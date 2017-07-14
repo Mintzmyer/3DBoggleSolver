@@ -47,14 +47,20 @@ class Cubie
 {
     public:
         bool used;
-        int neighbors = 0;
+        int neighbors;
         char letter;
         Cubie * nextTo[26];
    
+        Cubie();
         void setChar(char);       
         void addNeighbor(Cubie *);
         void printConnections();
 };
+
+Cubie::Cubie()
+{
+    int neighbors = 0;
+}
 
 void Cubie::setChar(char inLetter)
 {
@@ -64,7 +70,9 @@ void Cubie::setChar(char inLetter)
 void Cubie::addNeighbor(Cubie * cell)
 {
     nextTo[neighbors] = cell;
-    neighbors++;
+    std::cout << cell->letter;
+    std::cout << nextTo[neighbors]->letter;
+    this->neighbors++;
 }
 
 void Cubie::printConnections()
@@ -83,7 +91,7 @@ class Cube
         Cubie * Cubies;
 
         Cube(int);
-//        void setConnections();
+        void setConnections();
         void setLetters(std::string);
         void printCube();
 };
@@ -99,24 +107,25 @@ class Cube
 Cube::Cube(int inSize)
 {
     size = inSize;
-    Cubie array[size*size*size];
-    Cubies = array;
+    this->Cubies = new Cubie[size*size*size];
 
+    std::cout << "Cube initalized with " << size << " dimensions" << std::endl;
+    std::cout << "Now creating cubies for the cube" << std::endl;
     // Create sizeXsizeXsize cubies for the cube
     for (int c = 0; c < size*size*size; c++)
     {
-        Cubie cell;
-        Cubies[c] = cell;
+        this->Cubies[c] = Cubie();;
     }
-/*
+    std::cout << "Completed cubies for the cell" << std::endl;
 }
 
 void Cube::setConnections()
 {
-*/
+
     //  Populate cubie nextTo array with pointer to all cubies neighboring
     //  Iterate through the ith layer of the cube
     bool front, back, top, bottom, left, right;
+
     for (int i = 0; i < size; i++)
     {
         //  Iterate through the jth row of the ith layer
@@ -125,9 +134,10 @@ void Cube::setConnections()
             //  Iterate through the kth column of the jth row of the ith layer
             for (int k = 0; k < size; k++)
             {
+                //std::cout << "Setting initial values for booleans" << std::endl;
                 if (i > 0) front = false;
                 else front = true;
-                if (i < size-1) back = false;
+                if (i < size-1) back = false; 
                 else back = true;
                 if (j > 0) top = false;
                 else top = true;
@@ -138,6 +148,8 @@ void Cube::setConnections()
                 if (k < size-1) right = false;
                 else right = true;
 
+         //      std::cout << (i*16)+(j*4)+k << "th Cubie" << std::endl;
+           //     std::cout << "Setting 6 faces of cube" << std::endl;
                 //  Six faces to cube
                 if (!top) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+((j-1)*4)+k]);
                 if (!bottom) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+((j+1)*4)+k]);
@@ -146,6 +158,7 @@ void Cube::setConnections()
                 if (!left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+(j*4)+k-1]);
                 if (!right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+(j*4)+k+1]);
 
+           //     std::cout << "Setting 12 edges of cube" << std::endl;
                 //  Twelve edges to cube
                 if (!top && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i)*16)+((j-1)*4)+k-1]);
                 if (!top && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i)*16)+((j-1)*4)+k+1]);
@@ -162,6 +175,7 @@ void Cube::setConnections()
                 if (!left && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j)*4)+k-1]);
                 if (!left && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j)*4)+k-1]);
 
+          //      std::cout << "Setting 8 corners of cube" << std::endl;
                 //  Eight corners to cube
                 if (!top && !front && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j-1)*4)+k+1]);
                 if (!top && !back && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j-1)*4)+k+1]);
@@ -179,9 +193,12 @@ void Cube::setConnections()
 
 void Cube::setLetters(std::string cubeLetters)
 {
+    std::cout << "In the set letters method" << std::endl;
     for (int i = 0; i < size*size*size; i++)
     {
+        //std::cout << i << "th loop" << std::endl;
         Cubies[i].setChar(cubeLetters[i]);
+        //std::cout << Cubies[i].letter;
     }
 }
 
@@ -228,24 +245,27 @@ int main(int arc, char* argv[])
     std::unordered_set<std::string> dictionary = buildHash(argv[2]);
 
 //  Iterate over list of cubes
-
+    std::cout << "\nBeginning to iterate over list of cubes" << std::endl;
     //  Upload cube
     std::ifstream infile(argv[1]);
     std::string s;
     int cubeSize;
     while (std::getline(infile, s))
     {
+        std::cout << "In while loop, about to initialize cube" << std::endl;
         try
         {
             cubeSize = (int) cbrt(s.length());
             Cube game (cubeSize);
+            std::cout << "Cube initialized, about to set letters" << std::endl;
+            game.setConnections();
             game.setLetters(s);
-//            game.setConnections();
+            std::cout << "Letters set, about to print" << std::endl;
             game.printCube();
-
 
             for (int i = 0; i < 64; i++)
             {
+                std::cout << game.Cubies[i].letter << "   ";
                 game.Cubies[i].printConnections();
             }
 
