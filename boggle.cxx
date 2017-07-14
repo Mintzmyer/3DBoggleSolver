@@ -62,15 +62,17 @@ bool dictPrefix(std::string word, std::set<std::string> dictHash)
 {
     std::set<std::string>::iterator prefix;
     prefix = dictHash.lower_bound(word);
-    std::cout << "Prefix: " << *prefix << std::endl;
+    std::cout << "Prefix: " << *prefix;
     std::string result = *prefix;
     bool test;
-    if (result.length() > word.length())
+    if (result.length() >= word.length())
     {
         result = result.substr(0, word.length());
         test = (0 == result.compare(word));
     }
-    
+    if (!test) std::cout << " !";
+    else if (test) std::cout << " =";
+    std::cout << "= " << word << std::endl;
     return test;
 }
 
@@ -125,7 +127,7 @@ class Cube
 {
     public:
         int size;
-        Cubie * Cubies;
+        Cubie ** Cubies;
 
         Cube(int);
         void setConnections();
@@ -145,14 +147,14 @@ class Cube
 Cube::Cube(int inSize)
 {
     size = inSize;
-    this->Cubies = new Cubie[size*size*size];
+    this->Cubies = new Cubie*[size*size*size];
 
     //std::cout << "Cube initalized with " << size << " dimensions" << std::endl;
     //std::cout << "Now creating cubies for the cube" << std::endl;
     // Create sizeXsizeXsize cubies for the cube
     for (int c = 0; c < size*size*size; c++)
     {
-        this->Cubies[c] = Cubie();;
+        this->Cubies[c] = new Cubie();
     }
     //std::cout << "Completed cubies for the cell" << std::endl;
 }
@@ -189,41 +191,41 @@ void Cube::setConnections()
          //      std::cout << (i*16)+(j*4)+k << "th Cubie" << std::endl;
            //     std::cout << "Setting 6 faces of cube" << std::endl;
                 //  Six faces to cube
-                if (!top) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+((j-1)*4)+k]);
-                if (!bottom) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+((j+1)*4)+k]);
-                if (!front) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+(j*4)+k]);
-                if (!back) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+(j*4)+k]);
-                if (!left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+(j*4)+k-1]);
-                if (!right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[(i*16)+(j*4)+k+1]);
+                if (!top) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+((j-1)*4)+k]);
+                if (!bottom) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+((j+1)*4)+k]);
+                if (!front) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+(j*4)+k]);
+                if (!back) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+(j*4)+k]);
+                if (!left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+(j*4)+k-1]);
+                if (!right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[(i*16)+(j*4)+k+1]);
 
            //     std::cout << "Setting 12 edges of cube" << std::endl;
                 //  Twelve edges to cube
-                if (!top && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i)*16)+((j-1)*4)+k-1]);
-                if (!top && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i)*16)+((j-1)*4)+k+1]);
-                if (!bottom && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i)*16)+((j+1)*4)+k-1]);
-                if (!bottom && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i)*16)+((j+1)*4)+k+1]);
+                if (!top && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j-1)*4)+k-1]);
+                if (!top && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j-1)*4)+k+1]);
+                if (!bottom && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j+1)*4)+k-1]);
+                if (!bottom && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i)*16)+((j+1)*4)+k+1]);
 
-                if (!top && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j-1)*4)+k]);
-                if (!top && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j-1)*4)+k]);
-                if (!bottom && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j+1)*4)+k]);
-                if (!bottom && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j+1)*4)+k]);
+                if (!top && !front) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k]);
+                if (!top && !back) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k]);
+                if (!bottom && !front) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k]);
+                if (!bottom && !back) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k]);
 
-                if (!right && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j)*4)+k+1]);
-                if (!right && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j)*4)+k+1]);
-                if (!left && !front) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j)*4)+k-1]);
-                if (!left && !back) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j)*4)+k-1]);
+                if (!right && !front) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j)*4)+k+1]);
+                if (!right && !back) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j)*4)+k+1]);
+                if (!left && !front) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j)*4)+k-1]);
+                if (!left && !back) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j)*4)+k-1]);
 
           //      std::cout << "Setting 8 corners of cube" << std::endl;
                 //  Eight corners to cube
-                if (!top && !front && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j-1)*4)+k+1]);
-                if (!top && !back && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j-1)*4)+k+1]);
-                if (!bottom && !front && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j+1)*4)+k+1]);
-                if (!bottom && !back && !right) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j+1)*4)+k+1]);
+                if (!top && !front && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k+1]);
+                if (!top && !back && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k+1]);
+                if (!bottom && !front && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k+1]);
+                if (!bottom && !back && !right) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k+1]);
 
-                if (!top && !front && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j-1)*4)+k-1]);
-                if (!top && !back && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j-1)*4)+k-1]);
-                if (!bottom && !front && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i-1)*16)+((j+1)*4)+k-1]);
-                if (!bottom && !back && !left) Cubies[(i*16)+(j*4)+k].addNeighbor(&Cubies[((i+1)*16)+((j+1)*4)+k-1]);
+                if (!top && !front && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j-1)*4)+k-1]);
+                if (!top && !back && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j-1)*4)+k-1]);
+                if (!bottom && !front && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i-1)*16)+((j+1)*4)+k-1]);
+                if (!bottom && !back && !left) Cubies[(i*16)+(j*4)+k]->addNeighbor(Cubies[((i+1)*16)+((j+1)*4)+k-1]);
             }
         }
     }
@@ -235,7 +237,7 @@ void Cube::setLetters(std::string cubeLetters)
     for (int i = 0; i < size*size*size; i++)
     {
         //std::cout << i << "th loop" << std::endl;
-        Cubies[i].setChar(cubeLetters[i]);
+        Cubies[i]->setChar(cubeLetters[i]);
         //std::cout << Cubies[i].letter;
     }
 }
@@ -249,7 +251,7 @@ void Cube::printCube()
         {
             for (int k = 0; k < size; k++)
             {
-                std::cout << Cubies[(4*i)+(16*j)+k].letter << " ";
+                std::cout << Cubies[(4*i)+(16*j)+k]->letter << " ";
 
             }
             std::cout << "    ";
@@ -261,6 +263,10 @@ void Cube::printCube()
 
 void Cube::garbage()
 {
+    for (int c = 0; c < size*size*size; c++)
+    {
+        delete this->Cubies[c];
+    }
     delete this->Cubies;
 }
 
@@ -275,24 +281,29 @@ int Traverse(Cubie * cell, std::string word, std::unordered_set<std::string> * d
     
     int total = 0;
     //  Check if word is in dictionary
-    if (dictLookup(word, *dictionary)) total++;
+    if (dictLookup(word, *dictionary))
+    {
+        total++;
+        std::cout << "********** FOUND WORD #" << total << " : " << word << " *************" << std::endl;
+    }
     //  Check if prefix exists
     if (dictPrefix(word, *prefixDictionary))
     {
+        std::cout << "In if with: " << word << std::endl;
         cell->used = true;
         for (int i = 0; i < cell->neighbors; i++)
         {
-            word = std::string(1, cell->nextTo[i]->letter);
+            word = word + std::string(1, cell->nextTo[i]->letter);
             std::cout << " +1: " << word  << std::endl;
             if (cell->nextTo[i]->used == false)
                 total += Traverse(cell->nextTo[i], word, dictionary, prefixDictionary);
+            word.pop_back();        
         }
     }
     else
     {
-        std::cout << "Dead End: " << word;
-        word.pop_back();        
         cell->used = false;
+        std::cout << "Dead End: " << word << std::endl;
     }
     return total;
 }
@@ -347,8 +358,9 @@ int main(int arc, char* argv[])
 
             for (int i = 0; i < cubeSize*cubeSize*cubeSize; i++)
             {
-                std::cout << game.Cubies[i].letter << "   ";
-                game.Cubies[i].printConnections();
+//                std::cout << "Inside connections loop: " << i << std::endl;
+                std::cout << game.Cubies[i]->letter << "   ";
+                game.Cubies[i]->printConnections();
             }
 
             int wordCount = 0;
@@ -356,9 +368,9 @@ int main(int arc, char* argv[])
 
             for (int i = 0; i < (cubeSize*cubeSize*cubeSize); i++)
             {
-                std::string word = std::string(1, game.Cubies[i].letter);
+                std::string word = std::string(1, game.Cubies[i]->letter);
                 std::cout << "New Cell: " << word << std::endl;
-                wordCount = wordCount + Traverse(&game.Cubies[i], word, &dictionary, &prefixDictionary);
+                wordCount = wordCount + Traverse(game.Cubies[i], word, &dictionary, &prefixDictionary);
                 game.printCube();
             }
             std::cout << wordCount << std::endl;
