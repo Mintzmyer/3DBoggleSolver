@@ -9,6 +9,8 @@
 #include <fstream>
 #include <unordered_set>
 #include <math.h>
+#include <cstdio>
+#include <ctime>
 
 
 /*************************************
@@ -70,8 +72,8 @@ void Cubie::setChar(char inLetter)
 void Cubie::addNeighbor(Cubie * cell)
 {
     nextTo[neighbors] = cell;
-    std::cout << cell->letter;
-    std::cout << nextTo[neighbors]->letter;
+    //std::cout << cell->letter;
+    //std::cout << nextTo[neighbors]->letter;
     this->neighbors++;
 }
 
@@ -109,14 +111,14 @@ Cube::Cube(int inSize)
     size = inSize;
     this->Cubies = new Cubie[size*size*size];
 
-    std::cout << "Cube initalized with " << size << " dimensions" << std::endl;
-    std::cout << "Now creating cubies for the cube" << std::endl;
+    //std::cout << "Cube initalized with " << size << " dimensions" << std::endl;
+    //std::cout << "Now creating cubies for the cube" << std::endl;
     // Create sizeXsizeXsize cubies for the cube
     for (int c = 0; c < size*size*size; c++)
     {
         this->Cubies[c] = Cubie();;
     }
-    std::cout << "Completed cubies for the cell" << std::endl;
+    //std::cout << "Completed cubies for the cell" << std::endl;
 }
 
 void Cube::setConnections()
@@ -193,7 +195,7 @@ void Cube::setConnections()
 
 void Cube::setLetters(std::string cubeLetters)
 {
-    std::cout << "In the set letters method" << std::endl;
+    //std::cout << "In the set letters method" << std::endl;
     for (int i = 0; i < size*size*size; i++)
     {
         //std::cout << i << "th loop" << std::endl;
@@ -241,32 +243,38 @@ int main(int arc, char* argv[])
         return 0;
     }
 
+//  The clock is running
+    double duration;
+    std::clock_t start;
+
 //  Call method for dictionary
     std::unordered_set<std::string> dictionary = buildHash(argv[2]);
 
 //  Iterate over list of cubes
-    std::cout << "\nBeginning to iterate over list of cubes" << std::endl;
+    //std::cout << "\nBeginning to iterate over list of cubes" << std::endl;
     //  Upload cube
     std::ifstream infile(argv[1]);
     std::string s;
     int cubeSize;
+    int cubeCount = 0;
     while (std::getline(infile, s))
     {
-        std::cout << "In while loop, about to initialize cube" << std::endl;
+        //std::cout << "In while loop, about to initialize cube" << std::endl;
         try
         {
             cubeSize = (int) cbrt(s.length());
             Cube game (cubeSize);
-            std::cout << "Cube initialized, about to set letters" << std::endl;
+            cubeCount++;
+            //std::cout << "Cube initialized, about to set letters" << std::endl;
             game.setConnections();
             game.setLetters(s);
-            std::cout << "Letters set, about to print" << std::endl;
-            game.printCube();
+            //std::cout << "Letters set, about to print" << std::endl;
+//            game.printCube();
 
             for (int i = 0; i < 64; i++)
             {
-                std::cout << game.Cubies[i].letter << "   ";
-                game.Cubies[i].printConnections();
+                //std::cout << game.Cubies[i].letter << "   ";
+                //game.Cubies[i].printConnections();
             }
 
         }
@@ -278,6 +286,9 @@ int main(int arc, char* argv[])
 
 
     //  Traverse cube
+
+    duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
+    std::cout << "Scored " << cubeCount << " cubes in " << duration << " seconds." << std::endl;
 
 // Print # of cubes and time
 }
