@@ -57,8 +57,8 @@ bool dictLookup(std::string word, std::unordered_set<std::string> dictHash)
     return dictHash.count(word) > 0;
 }
 
-//  dictPrefix: accepts word and dictionary, returns if prefix exists
-bool dictPrefix(std::string word, std::set<std::string> dictHash)
+//  checkPrefix: accepts word and dictionary, returns if prefix exists
+bool checkPrefix(std::string word, std::set<std::string> dictHash)
 {
     std::set<std::string>::iterator prefix;
     prefix = dictHash.lower_bound(word);
@@ -285,9 +285,11 @@ int Traverse(Cubie * cell, std::string word, std::unordered_set<std::string> * d
     {
         total++;
         std::cout << "********** FOUND WORD #" << total << " : " << word << " *************" << std::endl;
+        dictionary->erase(word);
+        prefixDictionary->erase(word);
     }
     //  Check if prefix exists
-    if (dictPrefix(word, *prefixDictionary))
+    if (checkPrefix(word, *prefixDictionary))
     {
         std::cout << "In if with: " << word << std::endl;
         cell->used = true;
@@ -331,10 +333,10 @@ int main(int arc, char* argv[])
     std::unordered_set<std::string> dictionary = buildHash(argv[2]);
     std::set<std::string> prefixDictionary = buildSet(argv[2]);
     
-//    std::cout << "app: " << dictPrefix("app", prefixDictionary) << std::endl;
-//    std::cout << "awaya: " << dictPrefix("awaya", prefixDictionary) << std::endl;
-//    std::cout << "apr: " << dictPrefix("apr", prefixDictionary) << std::endl;
-//    std::cout << "zzz: " << dictPrefix("zzz", prefixDictionary) << std::endl;
+//    std::cout << "app: " << checkPrefix("app", prefixDictionary) << std::endl;
+//    std::cout << "awaya: " << checkPrefix("awaya", prefixDictionary) << std::endl;
+//    std::cout << "apr: " << checkPrefix("apr", prefixDictionary) << std::endl;
+//    std::cout << "zzz: " << checkPrefix("zzz", prefixDictionary) << std::endl;
 
 //  Iterate over list of cubes
     std::cout << "\nBeginning to iterate over list of cubes" << std::endl;
@@ -348,6 +350,18 @@ int main(int arc, char* argv[])
         std::cout << "In while loop, about to initialize cube" << std::endl;
         try
         {
+            std::unordered_set<std::string> gameDict = dictionary;
+            std::set<std::string> gamePreDict = prefixDictionary;
+/*
+            std::cout << "Test of PBV dictionaries" << std::endl;
+            gameDict.erase("germicide");
+            gamePreDict.erase("incantation");
+            std::cout << "Original: " << checkPrefix("incantation", prefixDictionary);
+            std::cout << " Copy: " << checkPrefix("incantation", gamePreDict) << std::endl;
+            std::cout << "Original: " << dictLookup("germicide", dictionary);
+            std::cout << " Copy: " << dictLookup("germicide", gameDict) << std::endl;
+*/
+
             cubeSize = (int) cbrt(s.length());
             Cube game (cubeSize);
             cubeCount++;
@@ -371,7 +385,7 @@ int main(int arc, char* argv[])
             {
                 std::string word = std::string(1, game.Cubies[i]->letter);
                 std::cout << "New Cell: " << word << std::endl;
-                wordCount = wordCount + Traverse(game.Cubies[i], word, &dictionary, &prefixDictionary);
+                wordCount = wordCount + Traverse(game.Cubies[i], word, &gameDict, &gamePreDict);
                 game.printCube();
             }
             std::cout << wordCount << std::endl;
