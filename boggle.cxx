@@ -299,6 +299,7 @@ int Traverse(Cubie * cell, std::string word, std::unordered_set<std::string> * d
                 total += Traverse(cell->nextTo[i], word, dictionary, prefixDictionary);
             word.pop_back();        
         }
+        cell->used = false;
     }
     else
     {
