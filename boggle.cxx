@@ -62,7 +62,7 @@ bool dictPrefix(std::string word, std::set<std::string> dictHash)
 {
     std::set<std::string>::iterator prefix;
     prefix = dictHash.lower_bound(word);
-    std::cout << "Prefix: " << *prefix << std::endl;
+//    std::cout << "Prefix: " << *prefix << std::endl;
     std::string result = *prefix;
     bool test;
     if (result.length() > word.length())
@@ -262,37 +262,33 @@ void Cube::printCube()
     Method for word search
     Traverses cube comparing to hasht
 *************************************/
-int Traverse(Cubie cell, Cubie** letters, std::string word, std::unordered_set<std::string> * dictionary, std::set<std::string> * prefixDictionary)
+int Traverse(Cubie * cell, Cubie** letters, std::string word, std::unordered_set<std::string> * dictionary, std::set<std::string> * prefixDictionary)
 {
+    std::cout << "At Traverse method" << std::endl;
     int total = 0;
     //  Check if word is in dictionary
     if (dictLookup(word, *dictionary)) total++;
     //  Check if prefix exists
     if (dictPrefix(word, *prefixDictionary))
     {
-        cell.used = true;
-        letters[word.length()] = &cell;
-        word+=cell.letter;
-        for (int i = 0; i < cell.neighbors; i++)
+        cell->used = true;
+        std::cout << "If: " << word << " ";
+        for (int i = 0; i < cell->neighbors; i++)
         {
-            total += Traverse(*cell.nextTo[i], letters, word, dictionary, prefixDictionary);
+            std::cout << " for " << word + cell->nextTo[i]->letter;
+            if (cell->nextTo[i]->used == false)
+                total += Traverse(cell->nextTo[i], letters, word, dictionary, prefixDictionary);
         }
     }
     else
     {
-        
-
+        std::cout << "Else: " << word;
+        word.pop_back();        
+        cell->used = false;
     }
     return total;
-
-    //  Set cell to occupied
-
-    //  Check if word is in dictionary
-
-    //  
-
-
 }
+
 
 /*************************************
     Main: 
@@ -315,13 +311,13 @@ int main(int arc, char* argv[])
     std::unordered_set<std::string> dictionary = buildHash(argv[2]);
     std::set<std::string> prefixDictionary = buildSet(argv[2]);
     
-    std::cout << "app: " << dictPrefix("app", prefixDictionary) << std::endl;
-    std::cout << "awaya: " << dictPrefix("awaya", prefixDictionary) << std::endl;
-    std::cout << "apr: " << dictPrefix("apr", prefixDictionary) << std::endl;
-    std::cout << "zzz: " << dictPrefix("zzz", prefixDictionary) << std::endl;
+//    std::cout << "app: " << dictPrefix("app", prefixDictionary) << std::endl;
+//    std::cout << "awaya: " << dictPrefix("awaya", prefixDictionary) << std::endl;
+//    std::cout << "apr: " << dictPrefix("apr", prefixDictionary) << std::endl;
+//    std::cout << "zzz: " << dictPrefix("zzz", prefixDictionary) << std::endl;
 
 //  Iterate over list of cubes
-    //std::cout << "\nBeginning to iterate over list of cubes" << std::endl;
+    std::cout << "\nBeginning to iterate over list of cubes" << std::endl;
     //  Upload cube
     std::ifstream infile(argv[1]);
     std::string s;
@@ -330,29 +326,33 @@ int main(int arc, char* argv[])
     Cubie * letters[64];
     while (std::getline(infile, s))
     {
-        //std::cout << "In while loop, about to initialize cube" << std::endl;
+        std::cout << "In while loop, about to initialize cube" << std::endl;
         try
         {
             cubeSize = (int) cbrt(s.length());
             Cube game (cubeSize);
             cubeCount++;
-            //std::cout << "Cube initialized, about to set letters" << std::endl;
+            std::cout << "Cube initialized, about to set letters" << std::endl;
             game.setConnections();
             game.setLetters(s);
-            //std::cout << "Letters set, about to print" << std::endl;
-//            game.printCube();
+            std::cout << "Letters set, about to print" << std::endl;
+            game.printCube();
 
             for (int i = 0; i < 64; i++)
             {
-                //std::cout << game.Cubies[i].letter << "   ";
-                //game.Cubies[i].printConnections();
+                std::cout << game.Cubies[i].letter << "   ";
+                game.Cubies[i].printConnections();
             }
 
             int wordCount = 0;
-            std::string word = "";
+            std::cout << "At traverse loop" << std::endl;
+
             for (int i = 0; i < (cubeSize*cubeSize*cubeSize); i++)
             {
-                wordCount = wordCount + Traverse(game.Cubies[i], letters, word, &dictionary, &prefixDictionary);
+                std::string word = std::string(1, game.Cubies[i].letter);
+                std::cout << "word: " << word;
+                wordCount = wordCount + Traverse(&game.Cubies[i], letters, word, &dictionary, &prefixDictionary);
+                game.printCube();
             }
             std::cout << wordCount << std::endl;
 
