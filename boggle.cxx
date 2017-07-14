@@ -123,6 +123,8 @@ void Cubie::printConnections()
     std::cout << std::endl;
 }
 
+
+
 class Cube
 {
     public:
@@ -333,11 +335,6 @@ int main(int arc, char* argv[])
     std::unordered_set<std::string> dictionary = buildHash(argv[2]);
     std::set<std::string> prefixDictionary = buildSet(argv[2]);
     
-//    std::cout << "app: " << checkPrefix("app", prefixDictionary) << std::endl;
-//    std::cout << "awaya: " << checkPrefix("awaya", prefixDictionary) << std::endl;
-//    std::cout << "apr: " << checkPrefix("apr", prefixDictionary) << std::endl;
-//    std::cout << "zzz: " << checkPrefix("zzz", prefixDictionary) << std::endl;
-
 //  Iterate over list of cubes
     //std::cout << "\nBeginning to iterate over list of cubes" << std::endl;
     //  Upload cube
@@ -352,15 +349,6 @@ int main(int arc, char* argv[])
         {
             std::unordered_set<std::string> gameDict = dictionary;
             std::set<std::string> gamePreDict = prefixDictionary;
-/*
-            //std::cout << "Test of PBV dictionaries" << std::endl;
-            gameDict.erase("germicide");
-            gamePreDict.erase("incantation");
-            //std::cout << "Original: " << checkPrefix("incantation", prefixDictionary);
-            //std::cout << " Copy: " << checkPrefix("incantation", gamePreDict) << std::endl;
-            //std::cout << "Original: " << dictLookup("germicide", dictionary);
-            //std::cout << " Copy: " << dictLookup("germicide", gameDict) << std::endl;
-*/
 
             cubeSize = (int) cbrt(s.length());
             Cube game (cubeSize);
@@ -390,13 +378,16 @@ int main(int arc, char* argv[])
             }
             std::cout << wordCount << std::endl;
             game.garbage();
-
+            gameDict.clear();
+            gamePreDict.clear();
         }
         catch (int e)
         {
         std::cout << "Exception! Check each cube has the correct number of letters. Exception #" << e << std::endl;
         }
     }
+    dictionary.clear();
+    prefixDictionary.clear();
 
     duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
     std::cout << "Scored " << cubeCount << " cubes in " << duration << " seconds." << std::endl;
