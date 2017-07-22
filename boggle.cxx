@@ -342,7 +342,6 @@ int main(int arc, char* argv[])
     {
         try
         {
-            std::cout << "In Cube work loop" << std::endl;
             std::unordered_set<std::string> gameDict = dictionary;
             std::set<std::string> gamePreDict = prefixDictionary;
             
