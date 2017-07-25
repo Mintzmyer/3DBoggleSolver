@@ -160,14 +160,17 @@ class Cube
 {
     public:
         int size;
+        int totalWords = 0;
         Cubie ** Cubies;
+        std::unordered_set<std::string> wordsFound;
 
         Cube(int);
         void setConnections();
         void setLetters(std::string);
+        bool checkWordsFound(std::string);
         void printCube();
         void garbage();
-};
+        void traverse(Cubie*, std::string, std::unordered_set<std::string>, std::set<std::string>);
 
 /*****************************************
     Initialize Cube
@@ -267,6 +270,12 @@ void Cube::setLetters(std::string cubeLetters)
     }
 }
 
+//  checkWordsFound: accepts word, returns true/false
+bool Cube::checkWordsFound(std::string word);
+{
+    return this->wordsFound.count(word) > 0;
+}
+
 void Cube::printCube()
 {
     std::cout << "Cube contents:\n" << std::endl;
@@ -300,16 +309,14 @@ void Cube::garbage()
     Method for word search
     Traverses cube comparing to hashtable
 *************************************/
-int Traverse(Cubie * cell, std::string word, std::unordered_set<std::string> * dictionary, std::set<std::string> * prefixDictionary)
+Cube::traverse(Cubie * cell, std::string word, std::unordered_set<std::string> * dictionary, std::set<std::string> * prefixDictionary)
 {
-    int total = 0;
 
     //  Check if word is in dictionary
-    if (dictLookup(word, *dictionary))
+    if ( (!checkWordsFound(word)) && (dictLookup(word, *dictionary)) )
     {
-        total++;
-        dictionary->erase(word);
-        prefixDictionary->erase(word);
+        this->totalWords++;
+        this->wordsFound.insert(word);
     }
 
     //  Check if prefix exists
@@ -320,7 +327,7 @@ int Traverse(Cubie * cell, std::string word, std::unordered_set<std::string> * d
         {
             word = word + std::string(1, cell->nextTo[i]->letter);
             if (cell->nextTo[i]->used == false)
-                total += Traverse(cell->nextTo[i], word, dictionary, prefixDictionary);
+                this->traverse(cell->nextTo[i], word, dictionary, prefixDictionary);
             word.pop_back();        
         }
         cell->used = false;
@@ -330,7 +337,7 @@ int Traverse(Cubie * cell, std::string word, std::unordered_set<std::string> * d
     {
         cell->used = false;
     }
-    return total;
+    return;
 }
 
 
