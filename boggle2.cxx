@@ -29,7 +29,7 @@ class WordWizard
         //  Word Dictionary
         std::set<std::string> WordDict;
         //  Lookup History
-        std::unordered_multimap<std::string, bool> History;
+        std::unordered_set<std::string, bool> History;
 
     //  Methods 
     public:
@@ -76,6 +76,7 @@ bool WordWizard::dictLookup(std::string word)
 //  checkPrefix: accepts word and dictionary, returns if prefix exists
 bool WordWizard::checkPrefix(std::string word)
 {
+    if (checkHistory(word)) return true;
     std::set<std::string>::iterator prefix;
     prefix = PrefixDict.lower_bound(word);
     std::string result = *prefix;
@@ -85,14 +86,14 @@ bool WordWizard::checkPrefix(std::string word)
         result = result.substr(0, word.length());
         test = (0 == result.compare(word));
     }
+    this->History.insert(word, test);
     return test;
 }
 
 //  checkHistory: accepts word, returns true/false
 bool WordWizard::checkHistory(std::string word);
 {
-
-
+    return this->History.count(word) > 0;
 }
 
 /*************************************
