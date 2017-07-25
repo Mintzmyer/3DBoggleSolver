@@ -29,7 +29,7 @@ class WordWizard
         //  Word Dictionary
         std::set<std::string> WordDict;
         //  Lookup History
-        std::unordered_set<std::string, bool> History;
+        std::unordered_multimap<std::string, bool> History;
 
     //  Methods 
     public:
@@ -107,7 +107,7 @@ class Cubie
         bool used;
         int neighbors;
         char letter;
-        std::unordered_multimap<std::string,Cubie**> nextTo;
+        std::unordered_multimap<std::string*,Cubie**> nextTo;
         //Cubie ** nextTo;
    
         Cubie();
@@ -132,7 +132,7 @@ void Cubie::setChar(char inLetter)
 void Cubie::addNeighbor(Cubie * cell)
 {
 //    std::cout << "Index: " << this->neighbors << std::endl;
-    this->nextTo.insert (cell.letter, cell);
+    this->nextTo.insert (&(cell.letter), cell);
 //    nextTo[neighbors] = cell;
 //    this->neighbors++;
 }
