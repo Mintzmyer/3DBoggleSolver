@@ -25,14 +25,22 @@ class WordWizard
     //  Data types
     protected:
         //  Prefix Dictionary
+        std::unordered_set<std::string> PrefixDict;
         //  Word Dictionary
-        //  
+        std::set<std::string> WordDict;
+        //  Lookup History
+        std::unordered_multimap<std::string, bool> History;
 
     //  Methods 
     public:
-        //  Prefix Checker
-        //  Word Checker
-    
+        //  Prefix Dictionary and Checker
+        std::unordered_set<std::string> buildHash(std::string);
+        bool dictLookup(std::string);
+        //  Word Dictionary and Checker
+        std::set<std::string> buildSet(std::string);
+        bool checkPrefix(std::string);
+        //  History checker
+        bool checkHistory(std::string);
 }
 
 //  buildHash: accepts dictionary file, returns hashtable of words
