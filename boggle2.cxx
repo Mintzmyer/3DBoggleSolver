@@ -34,58 +34,50 @@ class WordWizard
     //  Methods 
     public:
         //  Prefix Dictionary and Checker
-        std::unordered_set<std::string> buildHash(std::string);
+        buildHash(std::string);
         bool dictLookup(std::string);
         //  Word Dictionary and Checker
-        std::set<std::string> buildSet(std::string);
+        buildSet(std::string);
         bool checkPrefix(std::string);
         //  History checker
         bool checkHistory(std::string);
 }
 
 //  buildHash: accepts dictionary file, returns hashtable of words
-std::unordered_set<std::string> buildHash(std::string dictName)
+WordWizard::buildHash(std::string dictName)
 {
-    std::unordered_set<std::string> dictHash;
-
     //  Read words into hashtable
     std::ifstream infile(dictName);
     std::string s;
     while (std::getline(infile, s))
     {
-        dictHash.insert (s);
+        this->PrefixDict.insert (s);
     }
-
-    return dictHash;
 }
 
 //  buildSet: accepts dictionary file, returns hashtable of words
-std::set<std::string> buildSet(std::string dictName)
+WordWizard::buildSet(std::string dictName)
 {
-    std::set<std::string> dictHash;
-
     //  Read words into hashtable
     std::ifstream infile(dictName);
     std::string s;
     while (std::getline(infile, s))
     {
-        dictHash.insert (s);
+        WordDict.insert (s);
     }
-
-    return dictHash;
 }
 
 //  dictLookup: accepts word and dictionary, returns true/false
-bool dictLookup(std::string word, std::unordered_set<std::string> dictHash)
+bool WordWizard::dictLookup(std::string word)
 {
-    return dictHash.count(word) > 0;
+    return this->WordDict.count(word) > 0;
 }
 
 //  checkPrefix: accepts word and dictionary, returns if prefix exists
-bool checkPrefix(std::string word, std::set<std::string> dictHash)
+bool WordWizard::checkPrefix(std::string word)
 {
     std::set<std::string>::iterator prefix;
-    prefix = dictHash.lower_bound(word);
+    prefix = PrefixDict.lower_bound(word);
     std::string result = *prefix;
     bool test = false;
     if (result.length() >= word.length())
@@ -96,6 +88,12 @@ bool checkPrefix(std::string word, std::set<std::string> dictHash)
     return test;
 }
 
+//  checkHistory: accepts word, returns true/false
+bool WordWizard::checkHistory(std::string word);
+{
+
+
+}
 
 /*************************************
     Data Structure for Cubies
