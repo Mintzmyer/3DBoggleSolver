@@ -35,10 +35,10 @@ class WordWizard
     //  Methods 
     public:
         //  Prefix Dictionary and Checker
-        buildHash(std::string);
+        void buildHash(std::string);
         bool dictLookup(std::string);
         //  Word Dictionary and Checker
-        buildSet(std::string);
+        void buildSet(std::string);
         bool checkPrefix(std::string);
         //  History checker
         bool checkHistory(std::string);
@@ -171,7 +171,7 @@ class Cube
         bool checkWordsFound(std::string);
         void printCube();
         void garbage();
-        void traverse(Cubie*, std::string, std::unordered_set<std::string>, std::set<std::string>);
+        void traverse(Cubie*, std::string, WordWizard*);
 
 /*****************************************
     Initialize Cube
@@ -310,11 +310,11 @@ void Cube::garbage()
     Method for word search
     Traverses cube comparing to hashtable
 *************************************/
-Cube::traverse(Cubie * cell, std::string word, std::unordered_set<std::string> * dictionary, std::set<std::string> * prefixDictionary)
+Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
 {
 
     //  Check if word is in dictionary
-    if ( (!checkWordsFound(word)) && (dictLookup(word, *dictionary)) )
+    if ( (!checkWordsFound(word)) && (*(library).dictLookup(word) )
     {
         this->totalWords++;
         this->wordsFound.insert(word);
@@ -329,11 +329,11 @@ Cube::traverse(Cubie * cell, std::string word, std::unordered_set<std::string> *
         letter = *(Neighbor->first);
         word = word + letter;
         //  Traverse all unused valid prefix elements
-        if (checkPrefix(word, *prefixDictionary))
+        if (*(library).checkPrefix(word))
         {
             do
             {
-                this->traverse(Neighbor->second, word, dictionary, prefixDictionary);
+                this->traverse(Neighbor->second, word, library);
             } while (Neighbor != container.end() && letter == Neighbor->first);
         }
         else
@@ -369,10 +369,10 @@ int main(int arc, char* argv[])
     double duration;
     std::clock_t start;
 
-//  Call method for dictionary
-    std::unordered_set<std::string> dictionary = buildHash(argv[2]);
-    std::set<std::string> prefixDictionary = buildSet(argv[2]);
-
+//  Make new dictionary object
+    WordWizard reference = new WordWizard;
+    reference.buildHash(argv[2]);
+    reference.buildSet(argv[2]);
     
 //  Iterate over list of cubes
     //  Upload cube
@@ -384,9 +384,6 @@ int main(int arc, char* argv[])
     {
         try
         {
-            std::unordered_set<std::string> gameDict = dictionary;
-            std::set<std::string> gamePreDict = prefixDictionary;
-            
             cubeSize = (int) cbrt(s.length());
             Cube game (cubeSize);
      
@@ -402,20 +399,16 @@ int main(int arc, char* argv[])
             for (int i = 0; i < (pow(cubeSize, 3)); i++)
             {
                 std::string word = std::string(1, game.Cubies[i]->letter);
-                wordCount = wordCount + Traverse(game.Cubies[i], word, &gameDict, &gamePreDict);
+                game.traverse(game.Cubies[i], word, &reference);
             }
-            std::cout << wordCount << std::endl;
+            std::cout << game.totalWords << std::endl;
             game.garbage();
-            gameDict.clear();
-            gamePreDict.clear();
         }
         catch (int e)
         {
         std::cout << "Exception! Check each cube has the correct number of letters. Exception #" << e << std::endl;
         }
     }
-    dictionary.clear();
-    prefixDictionary.clear();
 
     // Print # of cubes and time
     duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
