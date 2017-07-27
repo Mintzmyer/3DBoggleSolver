@@ -9,6 +9,7 @@
 #include <fstream>
 #include <unordered_set>
 #include <unordered_multimap>
+#include <multimap>
 #include <math.h>
 #include <cstdio>
 #include <ctime>
@@ -107,7 +108,7 @@ class Cubie
         bool used;
         int neighbors;
         char letter;
-        std::unordered_multimap<std::string*,Cubie**> nextTo;
+        std::multimap<std::string*,Cubie**> nextTo;
         //Cubie ** nextTo;
    
         Cubie();
@@ -319,24 +320,33 @@ Cube::traverse(Cubie * cell, std::string word, std::unordered_set<std::string> *
         this->wordsFound.insert(word);
     }
 
-    //  Check if prefix exists
-    if (checkPrefix(word, *prefixDictionary))
+    cell->used = true;
+
+    //  Search unique elements of nextTo multimap for valid prefix
+    std::string letter;
+    for (std::multimap<std::string*, Cubie**> Neighbor = container.begin(); Neighbor != container.end(); )
     {
-        cell->used = true;
-        for (int i = 0; i < cell->neighbors; i++)
+        letter = *(Neighbor->first);
+        word = word + letter;
+        //  Traverse all unused valid prefix elements
+        if (checkPrefix(word, *prefixDictionary))
         {
-            word = word + std::string(1, cell->nextTo[i]->letter);
-            if (cell->nextTo[i]->used == false)
-                this->traverse(cell->nextTo[i], word, dictionary, prefixDictionary);
-            word.pop_back();        
+            do
+            {
+                this->traverse(Neighbor->second, word, dictionary, prefixDictionary);
+            } while (Neighbor != container.end() && letter == Neighbor->first);
         }
-        cell->used = false;
+        else
+        {
+            do 
+            {
+                ++Neighbor;
+            } while (Neighbor != container.end() && letter == Neighbor->first);
+        }
+        word.pop_back();
     }
 
-    else
-    {
-        cell->used = false;
-    }
+    cell->used = false;
     return;
 }
 
