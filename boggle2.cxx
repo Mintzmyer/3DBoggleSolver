@@ -108,12 +108,12 @@ class Cubie
     public:
         bool used;
         int neighbors;
-        char letter;
+        std::string letter;
         std::multimap<std::string*,Cubie**> nextTo;
         //Cubie ** nextTo;
    
         Cubie();
-        void setChar(char);       
+        void setLetter(std::string);       
         void addNeighbor(Cubie *);
         void printConnections();
         void trashCubie();
@@ -126,7 +126,7 @@ Cubie::Cubie()
 //    this->nextTo = new Cubie*[26];
 }
 
-void Cubie::setChar(char inLetter)
+void Cubie::setLetter(std::string inLetter)
 {
     letter = inLetter;
 }
@@ -173,6 +173,7 @@ class Cube
         void printCube();
         void garbage();
         void traverse(Cubie*, std::string, WordWizard*);
+};
 
 /*****************************************
     Initialize Cube
@@ -268,7 +269,7 @@ void Cube::setLetters(std::string cubeLetters)
 {
     for (int i = 0; i < pow(size, 3); i++)
     {
-        Cubies[i]->setChar(cubeLetters[i]);
+        Cubies[i]->setLetter(cubeLetters[i]);
     }
 }
 
