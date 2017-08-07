@@ -8,8 +8,8 @@
 #include <string>
 #include <fstream>
 #include <unordered_set>
-#include <unordered_multimap>
-#include <multimap>
+#include <unordered_map>
+#include <map>
 #include <math.h>
 #include <cstdio>
 #include <ctime>
@@ -26,9 +26,9 @@ class WordWizard
     //  Data types
     protected:
         //  Prefix Dictionary
-        std::unordered_set<std::string> PrefixDict;
+        std::set<std::string> PrefixDict;
         //  Word Dictionary
-        std::set<std::string> WordDict;
+        std::unordered_set<std::string> WordDict;
         //  Lookup History
         std::unordered_multimap<std::string, bool> History;
 
@@ -42,10 +42,10 @@ class WordWizard
         bool checkPrefix(std::string);
         //  History checker
         bool checkHistory(std::string);
-}
+};
 
 //  buildHash: accepts dictionary file, returns hashtable of words
-WordWizard::buildHash(std::string dictName)
+void WordWizard::buildHash(std::string dictName)
 {
     //  Read words into hashtable
     std::ifstream infile(dictName);
@@ -57,7 +57,7 @@ WordWizard::buildHash(std::string dictName)
 }
 
 //  buildSet: accepts dictionary file, returns hashtable of words
-WordWizard::buildSet(std::string dictName)
+void WordWizard::buildSet(std::string dictName)
 {
     //  Read words into hashtable
     std::ifstream infile(dictName);
@@ -87,12 +87,13 @@ bool WordWizard::checkPrefix(std::string word)
         result = result.substr(0, word.length());
         test = (0 == result.compare(word));
     }
-    this->History.insert(word, test);
+    std::pair<std::string, bool> prefixResult (word, test);
+    this->History.insert(prefixResult);
     return test;
 }
 
 //  checkHistory: accepts word, returns true/false
-bool WordWizard::checkHistory(std::string word);
+bool WordWizard::checkHistory(std::string word)
 {
     return this->History.count(word) > 0;
 }
@@ -133,9 +134,9 @@ void Cubie::setChar(char inLetter)
 void Cubie::addNeighbor(Cubie * cell)
 {
 //    std::cout << "Index: " << this->neighbors << std::endl;
-    this->nextTo.insert (&(cell.letter), cell);
-//    nextTo[neighbors] = cell;
-//    this->neighbors++;
+//  Should this really be Cubie**? Maybe Cubie*...
+    std::pair<std::string*, Cubie**> neighbor (&(cell->letter), cell);
+    this->nextTo.insert (neighbor);
 }
 
 void Cubie::printConnections()
