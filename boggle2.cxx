@@ -109,7 +109,7 @@ class Cubie
         bool used;
         int neighbors;
         std::string letter;
-        std::multimap<std::string*,Cubie**> nextTo;
+        std::multimap<std::string*,Cubie*> nextTo;
         //Cubie ** nextTo;
    
         Cubie();
@@ -135,7 +135,7 @@ void Cubie::addNeighbor(Cubie * cell)
 {
 //    std::cout << "Index: " << this->neighbors << std::endl;
 //  Should this really be Cubie**? Maybe Cubie*...
-    std::pair<std::string*, Cubie**> neighbor (&(cell->letter), cell);
+    std::pair<std::string*, Cubie*> neighbor (&(cell->letter), cell);
     this->nextTo.insert (neighbor);
 }
 
@@ -143,14 +143,14 @@ void Cubie::printConnections()
 {
     for (int i = 0; i < neighbors; i++)
     {
-        std::cout << nextTo[i]->letter << " ";
+        //std::cout << nextTo[i]->letter << " ";
     }
     std::cout << std::endl;
 }
 
 void Cubie::trashCubie()
 {
-    delete[] this->nextTo;
+    //delete[] this->nextTo;
 }
 
 /*************************************
@@ -269,12 +269,12 @@ void Cube::setLetters(std::string cubeLetters)
 {
     for (int i = 0; i < pow(size, 3); i++)
     {
-        Cubies[i]->setLetter(cubeLetters[i]);
+        Cubies[i]->setLetter( std::string(1, cubeLetters[i]) );
     }
 }
 
 //  checkWordsFound: accepts word, returns true/false
-bool Cube::checkWordsFound(std::string word);
+bool Cube::checkWordsFound(std::string word)
 {
     return this->wordsFound.count(word) > 0;
 }
@@ -312,11 +312,11 @@ void Cube::garbage()
     Method for word search
     Traverses cube comparing to hashtable
 *************************************/
-Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
+void Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
 {
 
     //  Check if word is in dictionary
-    if ( (!checkWordsFound(word)) && (*(library).dictLookup(word) )
+    if ( (!checkWordsFound(word)) && ((*library).dictLookup(word) ))
     {
         this->totalWords++;
         this->wordsFound.insert(word);
@@ -326,12 +326,12 @@ Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
 
     //  Search unique elements of nextTo multimap for valid prefix
     std::string letter;
-    for (std::multimap<std::string*, Cubie**> Neighbor = container.begin(); Neighbor != container.end(); )
+    for (std::multimap<std::string*, Cubie*> Neighbor = container.begin(); Neighbor != container.end(); )
     {
         letter = *(Neighbor->first);
         word = word + letter;
         //  Traverse all unused valid prefix elements
-        if (*(library).checkPrefix(word))
+        if ((*library).checkPrefix(word))
         {
             do
             {
@@ -400,7 +400,7 @@ int main(int arc, char* argv[])
 
             for (int i = 0; i < (pow(cubeSize, 3)); i++)
             {
-                std::string word = std::string(1, game.Cubies[i]->letter);
+                std::string word = game.Cubies[i]->letter;
                 game.traverse(game.Cubies[i], word, &reference);
             }
             std::cout << game.totalWords << std::endl;
