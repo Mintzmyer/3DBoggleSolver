@@ -372,9 +372,9 @@ int main(int arc, char* argv[])
     std::clock_t start;
 
 //  Make new dictionary object
-    WordWizard reference = new WordWizard;
-    reference.buildHash(argv[2]);
-    reference.buildSet(argv[2]);
+    WordWizard* reference = new WordWizard;
+    reference->buildHash(argv[2]);
+    reference->buildSet(argv[2]);
     
 //  Iterate over list of cubes
     //  Upload cube
@@ -401,7 +401,7 @@ int main(int arc, char* argv[])
             for (int i = 0; i < (pow(cubeSize, 3)); i++)
             {
                 std::string word = game.Cubies[i]->letter;
-                game.traverse(game.Cubies[i], word, &reference);
+                game.traverse(game.Cubies[i], word, reference);
             }
             std::cout << game.totalWords << std::endl;
             game.garbage();
