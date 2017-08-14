@@ -326,7 +326,7 @@ void Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
 
     //  Search unique elements of nextTo multimap for valid prefix
     std::string letter;
-    for (std::multimap<std::string*, Cubie*> Neighbor = container.begin(); Neighbor != container.end(); )
+    for (std::multimap<std::string*, Cubie*>::iterator Neighbor = cell->nextTo.begin(); Neighbor != cell->nextTo.end(); ) 
     {
         letter = *(Neighbor->first);
         word = word + letter;
@@ -336,14 +336,14 @@ void Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
             do
             {
                 this->traverse(Neighbor->second, word, library);
-            } while (Neighbor != container.end() && letter == Neighbor->first);
+            } while (Neighbor != cell->nextTo.end() && letter.compare(*(Neighbor->first)));
         }
         else
         {
             do 
             {
                 ++Neighbor;
-            } while (Neighbor != container.end() && letter == Neighbor->first);
+            } while (Neighbor != cell->nextTo.end() && letter.compare(*(Neighbor->first)));
         }
         word.pop_back();
     }
