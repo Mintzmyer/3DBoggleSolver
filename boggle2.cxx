@@ -41,7 +41,7 @@ class WordWizard
         void buildSet(std::string);
         bool checkPrefix(std::string);
         //  History checker
-        bool checkHistory(std::string);
+        int checkHistory(std::string);
 };
 
 //  buildHash: accepts dictionary file, returns hashtable of words
@@ -77,25 +77,59 @@ bool WordWizard::dictLookup(std::string word)
 //  checkPrefix: accepts word and dictionary, returns if prefix exists
 bool WordWizard::checkPrefix(std::string word)
 {
-    if (checkHistory(word)) return true;
-    std::set<std::string>::iterator prefix;
-    prefix = PrefixDict.lower_bound(word);
-    std::string result = *prefix;
-    bool test = false;
-    if (result.length() >= word.length())
+    std::cout << "Inside checkPrefix with " << word << std::endl;
+
+    int historyResult = checkHistory(word);
+
+    std::cout << "Completed historyResult, returned " << historyResult << std::endl;
+
+    if (historyResult != -1)
     {
-        result = result.substr(0, word.length());
-        test = (0 == result.compare(word));
+        return historyResult;
     }
-    std::pair<std::string, bool> prefixResult (word, test);
-    this->History.insert(prefixResult);
-    return test;
+    else
+    {
+        std::set<std::string>::iterator prefix;
+        prefix = PrefixDict.lower_bound(word);
+        std::string result = *prefix;
+        bool test = false;
+        if (result.length() >= word.length())
+        {
+            result = result.substr(0, word.length());
+            test = (0 == result.compare(word));
+        }
+        std::pair<std::string, bool> prefixResult (word, test);
+        this->History.insert(prefixResult);
+        return test;
+    }
 }
 
 //  checkHistory: accepts word, returns true/false
-bool WordWizard::checkHistory(std::string word)
+int WordWizard::checkHistory(std::string word)
 {
-    return this->History.count(word) > 0;
+    std::cout << "In checkHistory with " << word << std::endl;
+
+
+    if (! (this->History.count(word) > 0))
+    {
+        std::cout << "Word not in history " << std::endl;
+        return -1;
+    }
+    else
+    {
+        auto findResult = this->History.find(word);
+        
+        std::cout << "findResult returned " << findResult->second << std::endl;
+
+        if (findResult->second == true)
+        {
+            return 1;
+        }
+        else if (findResult->second == false)
+        {
+            return 0;
+        }
+    }
 }
 
 /*************************************
@@ -314,15 +348,19 @@ void Cube::garbage()
 *************************************/
 void Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
 {
+    std::cout << "Inside traverse with " << word << std::endl;
 
     //  Check if word is in dictionary
     if ( (!checkWordsFound(word)) && ((*library).dictLookup(word) ))
     {
+        std::cout << "Completed library dictLookup" << std::endl;
         this->totalWords++;
         this->wordsFound.insert(word);
     }
 
     cell->used = true;
+
+    std::cout << "Set cell->used to true" << std::endl;
 
     //  Search unique elements of nextTo multimap for valid prefix
     std::string letter;
@@ -330,9 +368,11 @@ void Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
     {
         letter = *(Neighbor->first);
         word = word + letter;
+        std::cout << "Entered new neighbor iterator: " << word << std::endl;
         //  Traverse all unused valid prefix elements
-        if ((*library).checkPrefix(word))
+        if ((*library).checkPrefix(word) && cell->used == false)
         {
+            std::cout << "Word: " << word << " prefix = " << (*library).checkPrefix(word)<< std::endl;
             do
             {
                 this->traverse(Neighbor->second, word, library);
@@ -382,24 +422,29 @@ int main(int arc, char* argv[])
     std::string s;
     int cubeSize;
     int cubeCount = 0;
+
+    std::cout << "Stage has been set" << std::endl;
+
     while (std::getline(infile, s))
     {
         try
         {
             cubeSize = (int) cbrt(s.length());
             Cube game (cubeSize);
-     
+
             cubeCount++;
             game.setConnections();
 
             game.setLetters(s);
  
             //game.printCube();
+            std::cout << "Game has been set" << std::endl;     
 
             int wordCount = 0;
 
             for (int i = 0; i < (pow(cubeSize, 3)); i++)
             {
+                std::cout << "Starting to traverse a new cubie: " << game.Cubies[i]->letter << std::endl;
                 std::string word = game.Cubies[i]->letter;
                 game.traverse(game.Cubies[i], word, reference);
             }
