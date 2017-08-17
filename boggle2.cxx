@@ -77,11 +77,11 @@ bool WordWizard::dictLookup(std::string word)
 //  checkPrefix: accepts word and dictionary, returns if prefix exists
 bool WordWizard::checkPrefix(std::string word)
 {
-    std::cout << "Inside checkPrefix with " << word << std::endl;
+    //std::cout << "Inside checkPrefix with " << word << std::endl;
 
     int historyResult = checkHistory(word);
 
-    std::cout << "Completed historyResult, returned " << historyResult << std::endl;
+    //std::cout << "Completed historyResult, returned " << historyResult << std::endl;
 
     if (historyResult != -1)
     {
@@ -107,19 +107,19 @@ bool WordWizard::checkPrefix(std::string word)
 //  checkHistory: accepts word, returns true/false
 int WordWizard::checkHistory(std::string word)
 {
-    std::cout << "In checkHistory with " << word << std::endl;
+    //std::cout << "In checkHistory with " << word << std::endl;
 
 
     if (! (this->History.count(word) > 0))
     {
-        std::cout << "Word not in history " << std::endl;
+        //std::cout << "Word not in history " << std::endl;
         return -1;
     }
     else
     {
         auto findResult = this->History.find(word);
         
-        std::cout << "findResult returned " << findResult->second << std::endl;
+        //std::cout << "findResult returned " << findResult->second << std::endl;
 
         if (findResult->second == true)
         {
@@ -360,8 +360,6 @@ void Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
 
     cell->used = true;
 
-    std::cout << "Set cell->used to true" << std::endl;
-
     //  Search unique elements of nextTo multimap for valid prefix
     std::string letter;
     for (std::multimap<std::string*, Cubie*>::iterator Neighbor = cell->nextTo.begin(); Neighbor != cell->nextTo.end(); ) 
@@ -370,7 +368,8 @@ void Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
         word = word + letter;
         std::cout << "Entered new neighbor iterator: " << word << std::endl;
         //  Traverse all unused valid prefix elements
-        if ((*library).checkPrefix(word) && cell->used == false)
+        std::cout << "Word = " << word << " Letter = " << letter << " used = " << Neighbor->second->used << std::endl;
+        if ((*library).checkPrefix(word) && Neighbor->second->used == false)
         {
             std::cout << "Word: " << word << " prefix = " << (*library).checkPrefix(word)<< std::endl;
             do
@@ -380,12 +379,15 @@ void Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
         }
         else
         {
-            do 
+            while (Neighbor != cell->nextTo.end() && letter.compare(*(Neighbor->first)))
             {
                 ++Neighbor;
-            } while (Neighbor != cell->nextTo.end() && letter.compare(*(Neighbor->first)));
+                std::cout << "Else: " << letter << " and " << (*(Neighbor->first)) << " evaluates to " << letter.compare(*(Neighbor->first)) << std::endl;
+            } 
         }
+        std::cout << "Finished examining " << word << std::endl;
         word.pop_back();
+        ++Neighbor;
     }
 
     cell->used = false;
