@@ -7,6 +7,16 @@ Solves a Boggle-ish puzzle with 3D 4x4x4 cube of letters
     * Use cmake to build project
     * Use make to compile project
 
+    Files I wrote:
+    * CMakeLists.txt - File to build project with cmake and generate Makefile
+    * boggle.cxx     - C++ program to solve 3d boggle boards
+
+    Files for testing:
+    * cubes.txt      - File containing 1000 boggle boards
+    * smallCubes.txt - File containing 6 simple boggle boards
+    * words.txt      - Dictionary containing 24002 words
+    * smallWords.txt - Dictionary containing 190 words
+    * score.macros   - Professional solution by Connected Signals for comparison
 
 —-Contents-—
 
