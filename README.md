@@ -1,6 +1,12 @@
 # 3DBoggleSolver
-Solves Boggle-like puzzle with 3D 4x4x4 cube of letters
+Solves a Boggle-ish puzzle with 3D 4x4x4 cube of letters
             Samantha Mintzmyer
+
+    To run:
+    * Clone the repository
+    * Use cmake to build project
+    * Use make to compile project
+
 
 —-Contents-—
 

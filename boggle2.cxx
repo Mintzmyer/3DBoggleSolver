@@ -405,7 +405,7 @@ int main(int arc, char* argv[])
 //  Check usage
     if (arc != 3)
     {
-        std::cout << "usage: boggle.cxx cube-file word-file" << std::endl;
+        std::cout << "usage: BoggleSolver cube-file word-file" << std::endl;
         return 0;
     }
 
