@@ -77,11 +77,11 @@ bool WordWizard::dictLookup(std::string word)
 //  checkPrefix: accepts word and dictionary, returns if prefix exists
 bool WordWizard::checkPrefix(std::string word)
 {
-    //std::cout << "Inside checkPrefix with " << word << std::endl;
+    //  std::cout << "Inside checkPrefix with " << word << std::endl;
 
     int historyResult = checkHistory(word);
 
-    //std::cout << "Completed historyResult, returned " << historyResult << std::endl;
+    //  std::cout << "Completed historyResult, returned " << historyResult << std::endl;
 
     if (historyResult != -1)
     {
@@ -348,12 +348,12 @@ void Cube::garbage()
 *************************************/
 void Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
 {
-    std::cout << "Inside traverse with " << word << std::endl;
+    //  std::cout << "Inside traverse with " << word << std::endl;
 
     //  Check if word is in dictionary
     if ( (!checkWordsFound(word)) && ((*library).dictLookup(word) ))
     {
-        std::cout << "Completed library dictLookup" << std::endl;
+        //  std::cout << "Completed library dictLookup" << std::endl;
         this->totalWords++;
         this->wordsFound.insert(word);
     }
@@ -366,12 +366,12 @@ void Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
     {
         letter = *(Neighbor->first);
         word = word + letter;
-        std::cout << "Entered new neighbor iterator: " << word << std::endl;
+        //  std::cout << "Entered new neighbor iterator: " << word << std::endl;
         //  Traverse all unused valid prefix elements
-        std::cout << "Word = " << word << " Letter = " << letter << " used = " << Neighbor->second->used << std::endl;
+        //  std::cout << "Word = " << word << " Letter = " << letter << " used = " << Neighbor->second->used << std::endl;
         if ((*library).checkPrefix(word) && Neighbor->second->used == false)
         {
-            std::cout << "Word: " << word << " prefix = " << (*library).checkPrefix(word)<< std::endl;
+            //  std::cout << "Word: " << word << " prefix = " << (*library).checkPrefix(word)<< std::endl;
             do
             {
                 this->traverse(Neighbor->second, word, library);
@@ -385,7 +385,7 @@ void Cube::traverse(Cubie * cell, std::string word, WordWizard* library)
                 std::cout << "Else: " << letter << " and " << (*(Neighbor->first)) << " evaluates to " << letter.compare(*(Neighbor->first)) << std::endl;
             } 
         }
-        std::cout << "Finished examining " << word << std::endl;
+        //  std::cout << "Finished examining " << word << std::endl;
         word.pop_back();
         ++Neighbor;
     }
@@ -425,7 +425,7 @@ int main(int arc, char* argv[])
     int cubeSize;
     int cubeCount = 0;
 
-    std::cout << "Stage has been set" << std::endl;
+    //  std::cout << "Stage has been set" << std::endl;
 
     while (std::getline(infile, s))
     {
@@ -440,13 +440,13 @@ int main(int arc, char* argv[])
             game.setLetters(s);
  
             //game.printCube();
-            std::cout << "Game has been set" << std::endl;     
+            //  std::cout << "Game has been set" << std::endl;     
 
             int wordCount = 0;
 
             for (int i = 0; i < (pow(cubeSize, 3)); i++)
             {
-                std::cout << "Starting to traverse a new cubie: " << game.Cubies[i]->letter << std::endl;
+                //  std::cout << "Starting to traverse a new cubie: " << game.Cubies[i]->letter << std::endl;
                 std::string word = game.Cubies[i]->letter;
                 game.traverse(game.Cubies[i], word, reference);
             }
@@ -461,6 +461,6 @@ int main(int arc, char* argv[])
 
     // Print # of cubes and time
     duration = (std::clock() - start ) / (double) CLOCKS_PER_SEC;
-    std::cout << "Scored " << cubeCount << " cubes in " << duration << " seconds." << std::endl;
+    std::cout << "Scored " << cubeCount << " cubes with dimension " << cubeSize << " in " << duration << " seconds." << std::endl;
 
 }
